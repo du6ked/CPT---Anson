@@ -151,3 +151,44 @@ def startupmenu():
         clock.tick(60)
 
 #=============================================
+
+misccounter = 1
+
+def preference_menu():
+
+    gamestate = PREFERENCES
+    music_sfx_logic(gamestate)
+
+    global screen
+    global misccounter
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if Button_soundpref.collidepoint(event.pos):
+                    counter += 1
+                    if counter %2 == 0:
+                        mixer.music.pause() 
+                    else:
+                        mixer.music.unpause()
+                if Button_back.collidepoint(event.pos):
+                    return  
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    escape()
+
+        screen.fill(BLACK) 
+
+        mouse_pos = pygame.mouse.get_pos()
+        button_color_soundpref = get_button_color(Button_soundpref, mouse_pos)
+        button_color_back = get_button_color(Button_back, mouse_pos)
+
+        draw_button(screen, Button_soundpref, button_color_soundpref, "Music ON/OFF")
+        draw_button(screen, Button_back, button_color_back, "Back")
+
+        pygame.display.flip()
+        clock.tick(60)
+
+#=====================================================
