@@ -1,3 +1,27 @@
+# things to do.
+
+#not even started -->
+#-----------------------------
+#sound toggle and ambience -----------> Next up
+#cutscenes and pngs -----------> Next up
+#lives/shotgun shell mechanic -----------> Next up
+#charcter progamming and dialouge 
+#listing and bug fixes
+#-----------------------------
+
+#in progress -->
+#-----------------------------
+#drawing scenes and characters (12%)
+#gun game mini game (probably about 60% done)
+#-----------------------------
+
+#done -->
+#------------------------
+#pressable buttons.
+#startup menu(kind done, still subject to change and modification)
+#bar and combat slider for gun game
+#-------------------------
+# 
 import pygame
 from pygame import mixer
 import sys
@@ -36,6 +60,12 @@ Button_quit = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
 
 #restart(gameover)
 Button_restart = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
+
+#Main buttons
+button_pos_x_main= width / 2 - 550
+button_pos_y_main = height / 2 - 300
+
+Button_talk = pygame.Rect(button_pos_x_main, button_pos_y_main, 175, 70)
 
 #slider(gungame)
 slider_pos_x = width / 2 - 375
@@ -130,7 +160,7 @@ def startupmenu():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if Button_start.collidepoint(event.pos): 
-                    gungame() #switch out gungame for cutscene --> main game.
+                    print('start') #switch out gungame for cutscene --> main game.
                     #direct player to gungame if thier life is in danger.
                 if Button_options.collidepoint(event.pos):
                     preference_menu()
@@ -192,3 +222,30 @@ def preference_menu():
         clock.tick(60)
 
 #=====================================================
+
+def escape():
+    global screen 
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if Button_quit.collidepoint(event.pos):
+                    pygame.quit()
+                    sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
+        
+        screen.fill(BLACK) 
+
+        mouse_pos = pygame.mouse.get_pos()
+        button_color_quit = get_button_color(Button_soundpref, mouse_pos)
+
+        draw_button(screen, Button_quit, button_color_quit, "Quit Game")
+
+        pygame.display.flip()
+        clock.tick(60)
+
+#=======================================================
