@@ -1,18 +1,25 @@
 # things to do.
 
 #not even started -->
-#-----------------------------
-#sound toggle and ambience -----------> Next up
+#----------------------------- 
 #cutscenes and pngs -----------> Next up
-#lives/shotgun shell mechanic -----------> Next up
+#lives/shotgun shell mechanic 
+#switch character
+#more preference options
+#win screen
 #charcter progamming and dialouge 
 #listing and bug fixes
+#sfx for encounters -----------> Next up
+
+#NOTE: consider learning classes and reprogramming some of the code to make use of classes.
 #-----------------------------
 
 #in progress -->
 #-----------------------------
+#sound toggle and ambience
 #drawing scenes and characters (12%)
-#gun game mini game (probably about 60% done)
+#gun game mini game (probably about 80% done)
+#code optimization 
 #-----------------------------
 
 #done -->
@@ -20,6 +27,9 @@
 #pressable buttons.
 #startup menu(kind done, still subject to change and modification)
 #bar and combat slider for gun game
+# Game state tracker
+# Escape menu (pause)
+# game over menu
 #-------------------------
 # 
 import pygame
@@ -35,18 +45,18 @@ BUTTON_HOVER_COLOR = (120, 120, 120)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-red = (255, 0, 0)
-gold = (255, 215, 0)
+RED = (255, 0, 0)
+GOLD = (255, 215, 0)
 
 #variables
-width = 1920
-height = 1080
-size = (width, height)
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
+size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 #buttons
-button_pos_x = width / 2 - 100
-button_pos_y_start = height / 2 + 210
-button_pos_y_options = height / 2 + 275
+button_pos_x = SCREEN_WIDTH / 2 - 100
+button_pos_y_start = SCREEN_HEIGHT / 2 + 225
+button_pos_y_options = SCREEN_HEIGHT / 2 + 300
 
 Button_start = pygame.Rect(button_pos_x, button_pos_y_start, 200, 50)
 Button_options = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
@@ -62,8 +72,8 @@ Button_quit = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
 Button_restart = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
 
 #Main buttons
-button_pos_x_main= width / 2 - 600
-button_pos_y_main = height / 2 - 300
+button_pos_x_main= SCREEN_WIDTH / 2 - 600
+button_pos_y_main = SCREEN_HEIGHT / 2 - 300
 
 Button_talk = pygame.Rect(button_pos_x_main, button_pos_y_main, 175, 70)
 Button_look = pygame.Rect(button_pos_x_main, button_pos_y_main + 150, 175, 70)
@@ -71,9 +81,9 @@ Button_letin = pygame.Rect(button_pos_x_main, button_pos_y_main + 300, 225, 70)
 Button_ignore = pygame.Rect(button_pos_x_main, button_pos_y_main + 450, 175, 70)
 
 #slider(gungame)
-slider_pos_x = width / 2 - 375
-slider_pos_y = height / 2 + 300
-slider_pos_x_moveable = slider_pos_x
+bar_x = SCREEN_WIDTH / 2 - 375
+bar_y = SCREEN_HEIGHT / 2 + 300
+slider_x = bar_x
 sliderspeed = 8.5
 
 #critbar(gungame)
@@ -163,7 +173,7 @@ def startupmenu():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if Button_start.collidepoint(event.pos): 
-                    print('main game') # main_game() #switch out gungame for cutscene --> main game.
+                    gungame() # main_game() #switch out gungame for cutscene --> main game.
                     #direct player to gungame if thier life is in danger.
                 if Button_options.collidepoint(event.pos):
                     preference_menu()
@@ -258,7 +268,7 @@ def gungame():
     gamestate = GUNGAME
     music_sfx_logic(gamestate)
 
-    global slider_pos_x_moveable
+    global slider_x
     global sliderspeed
     global critbar_pos_x_var
     global critbar_size_var
@@ -274,34 +284,61 @@ def gungame():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_f:
-                    hit_flag = slider_pos_x_moveable >= critbar_pos_x_var and slider_pos_x_moveable <= critbar_pos_x_var + critbar_size_var #critbar determinate
+                    hit_flag = slider_x >= critbar_pos_x_var and slider_x <= critbar_pos_x_var + critbar_size_var #critbar determinate
                     if hit_flag:
                         print ('hit') #contine game
                     else:
-                        print('gameover') #call game over screen
+                        gameover() #call game over screen
                 if event.key == pygame.K_ESCAPE:
                     escape()
 
         screen.fill(BLACK)
 
-        pygame.draw.rect(screen, WHITE, (slider_pos_x, slider_pos_y, 750, 25))
+        pygame.draw.rect(screen, WHITE, (bar_x, bar_y, 750, 25))
 
         #-----------------------------------------------------------------
         #crit bar
 
-        pygame.draw.rect(screen, red, (critbar_pos_x_var, slider_pos_y, critbar_size_var, 25))
+        pygame.draw.rect(screen, RED, (critbar_pos_x_var, bar_y, critbar_size_var, 25))
 
         #-----------------------------------------------------------------
         # Combat slider
 
-        slider_pos_x_moveable += sliderspeed #get it started
+        slider_x += sliderspeed #get it started
 
-        if slider_pos_x_moveable <= slider_pos_x or slider_pos_x_moveable + 20 >= slider_pos_x + 750: #rebounder
+        if slider_x <= bar_x or slider_x + 20 >= bar_x + 750: #rebounder
             sliderspeed = -sliderspeed
 
-        pygame.draw.rect(screen, gold, (slider_pos_x_moveable, slider_pos_y - 7.5, 20, 40))
+        pygame.draw.rect(screen, GOLD, (slider_x, bar_y - 7.5, 20, 40))
 
         pygame.display.flip()
         clock.tick(60)
 
 #================================================
+
+#gameover screen & win screen
+
+#unfinished
+
+def gameover():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    if Button_restart.collidepoint(event.pos):
+                        startupmenu()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_ESCAPE:
+                    escape()      
+                    
+        screen.fill(BLACK) 
+
+        mouse_pos = pygame.mouse.get_pos()
+        button_color_restart = get_button_color(Button_restart, mouse_pos)
+
+        draw_button(screen, Button_restart, button_color_restart, "Restart")
+
+        pygame.display.flip()
+        clock.tick(60)
