@@ -342,3 +342,33 @@ def gameover():
 
         pygame.display.flip()
         clock.tick(60)
+
+# ===============================================
+#creating characters and stuff (more coming)
+
+class Character:
+    def __init__(self, name, portrait, isAbnormal, dialoguelist) -> None:
+        self.name = name
+        self.portrait = portrait
+        self.dialogue = dialoguelist
+        self.isAbnormal = isAbnormal
+
+
+
+Backpacker = Character("Backpacker", "backpacker 1920x1080.png", False,
+                      ["Hello... uhm, sorry for the trouble, do you mind if I stay here a bit?... Please I'm cold and it's getting darker.",
+                        "I was hiking around in deeper in the forest when the blizzard hit. I wasn't expecting such weather so I only wore this thin red jacket.",
+                          "The bacpack? Oh, there's a few cans of tomato soup, I'm willing to share, just let me in please."])
+
+Zipperman = Character("Zipper", "zipper.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
+                   "Mind if I kick my feet up for a bit, preferably inside, um, the cabin? hehehe... *he smiles intently*" ,
+                   "Yeah, uhh inside the cabin, um I need to be inside the cabin to be warm... heh.", 
+                   "So let me in because I need to, heh, be w-warm? uhm... *he looks from side to side nervously as you continue to interrogate him*", 
+                   "p-please?",
+                   "*Within the span of a few seconds, his eyes widen and smile widens within his saggy skin*",
+                    "PLEASE MAN!! I HAVENT EATEN IN DAYYYSSSS! AND I CAN TELL THERE ARE A FEW OF YOU IN THERE.... HEH",
+                    "I CAN SMELL YOU.... EH HEH HE" ] )
+
+characters = [Backpacker, Zipperman]
+
+#========================================
