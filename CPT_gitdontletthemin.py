@@ -372,3 +372,25 @@ Zipperman = Character("Zipper", "zipper.png", True, ["Hey man! It's abosolutely 
 characters = [Backpacker, Zipperman]
 
 #========================================
+
+ch_id = 0
+
+dialogue_id = 0
+
+current_character = characters[ch_id]
+
+def switch_character(id):
+    global ch_id, dialogue_id, current_character, peephole
+
+    ch_id = id
+    dialogue_id = 0#
+    
+    # if ch_id == len(characters):
+    #         print("you finish good job") #replace with finish screen
+    #         quit()
+
+    current_character = characters[ch_id]
+
+    peephole = pygame.image.load(current_character.portrait)
+
+#---------------------------------
