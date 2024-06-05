@@ -394,3 +394,136 @@ def switch_character(id):
     peephole = pygame.image.load(current_character.portrait)
 
 #---------------------------------
+
+
+#====================================================================
+#score
+
+normals_saved = 0
+normals_rejected = 0
+abnormals_killed = 0
+abnormals_rejected = 0
+
+#======================
+
+class Character:
+    def __init__(self, name, portrait, isAbnormal, dialoguelist) -> None:
+        self.name = name
+        self.portrait = portrait
+        self.dialogue = dialoguelist
+        self.isAbnormal = isAbnormal
+
+Backpacker = Character("Backpacker", "backpacker 1920x1080.png", False,
+                      ["Hello... uhm, sorry for the trouble, do you mind if I stay here a bit?... Please I'm cold and it's getting darker.",
+                       "Is anyone home? I'm so sorry to bother you, but I'm in a really tough spot.",
+                       "My name's Alex, and I'm a backpacker who got caught in this blizzard.",
+                       "I'm freezing out here, and I'm really scared I won't make it much longer.",
+                       "Please, I don't mean any harm—I just need a place to warm up and ride out the storm. I promise I won't be any trouble.", 
+                        "I was hiking around in deeper in the forest when the blizzard hit. I wasn't expecting such weather so I only wore this thin red jacket.",
+                          "The bacpack? Oh- I-I have some food and supplies I can share if that helps.",
+                           "I just really need some shelter right now. Can you please let me in? I would be so grateful."])
+
+Mother = Character("Mother", "Mother 1920x1080.png", True, 
+                   ["H-hello, m-my baby... He's freezing out here. Would you be so kind as to let us in your cabin?", 
+                    "W-what? What's wrong with my baby?",
+                    "He's just different... More importantly, can you let us in?"])
+
+Zipperman = Character("Zipper", "Zipperman 1920x1080.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
+                   "Mind if I kick my feet up for a bit, preferably inside, um, the cabin? hehehe... *he smiles intently*" ,
+                   "Yeah, uhh inside the cabin, um I need to be inside the cabin to be warm... heh.", 
+                   "So let me in because I need to, heh, be w-warm? uhm... *he looks from side to side nervously as you continue to interrogate him*", 
+                   "p-please?",
+                   "*Within the span of a few seconds, his eyes widen and smile widens within his saggy skin*",
+                    "PLEASE MAN!! I HAVENT EATEN IN DAYYYSSSS! AND I CAN TELL THERE ARE A FEW OF YOU IN THERE.... HEH",
+                    "I CAN SMELL YOU.... EH HEH HE" ] )
+
+Alonewoman = Character("Woman", "Alone Woman 1920x1080.png", True, ["Hey, I was out hiking with some friends and...",
+                        "Well, long story short, we got lost and separated.", 
+                        "I come alone.", 
+                        "You know the woods here near the cemetary are dangerous. You should really get out of this area.",
+                        "Bbbbuttt I guess that's not for me to say because I'm lost as well...", 
+                        "Oh- which brings me to my main point. Can you let me sleep here tonight?", 
+                        "Hello? *The door handle shakes as she tries to open the door*",
+                        "I can tell somebody's here by the fact that the door is locked."])
+
+Gravekeeper = Character("Gravekeeper", "Gravekeeper 1920x1080.png", False, ["Aye! *he bangs on the door* Who be in there? *He attempts to peer through the cracks of the wooden door.*",
+                        "Aye these youngins nowadays...",
+                        "*he clicks his tounge and spits on the snow as he take a swig of what looks like whiskey out of a small metal flask.*",
+                        "Least I know that I made the dead bolts strong enough...", 
+                        "Aye! Whoever's in there, just so ye'know I made this cabin for myself, not you pesky hikers.", 
+                        "*His dememor becomes more frustrated as he starts to bang on the door*",
+                        "*He stops as he realizes that its pointless, and sits down in front of the door.*", 
+                        "*He mutters quietly* This blasted blizzard's gotten out of hand, but I'm not too worried about that.", 
+                        "there are \"things\" out here you know?",
+                        "The name's John. I'm the gravekeeper around these here parts.", 
+                        "Just let me in sonny... I don't bite. I promise."])
+
+Hehe = Character("Hehe", " hehe.png", True, ["*heavy breathing can be heard from the other side of the door.*"])
+
+characters = [Backpacker, Gravekeeper, Alonewoman, Mother, Zipperman]
+#NOTE: REMEMBER TO ADD CHARACTER TO LIST AFTER CREATION.
+#--------------------------
+
+ch_id = 0
+
+dialogue_id = 0
+
+current_character = characters[ch_id]
+
+def switch_character(id):
+    global ch_id, dialogue_id, current_character, peephole
+
+    ch_id = id
+    dialogue_id = 0#
+    
+    if ch_id == len(characters):
+            finishscreen()
+
+    current_character = characters[ch_id]
+
+    peephole = pygame.image.load(current_character.portrait)
+
+#---------------------------------
+
+font_1 = pygame.font.Font("Dimurphic-Gl6Z.ttf", 20)
+
+# peephole = pygame.image.load(current_character.portrait)
+door = pygame.image.load("door_1920x1080.png")
+
+def draw_text(screen, rect, color, text):
+    pygame.draw.rect(screen, color, rect)
+    text_surf = font_1.render(text, True, BLACK)
+    text_rect = text_surf.get_rect(center=rect.center)
+    screen.blit(text_surf, text_rect)
+
+#-------------------------------
+#door opening
+
+def dooropening(ignore):
+
+    timer = 0
+    delay = 1
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(BLACK)
+
+        timer += 1/60
+        if timer >= delay:
+            return
+
+        rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
+        if ignore:
+            draw_text(screen, rect, WHITE, ("You ignored the knocking..."))
+        else:
+            draw_text(screen, rect, WHITE, ("You let them in..."))
+
+        pygame.display.flip()
+        clock.tick(60)           
+
+
+#-------------------------------
