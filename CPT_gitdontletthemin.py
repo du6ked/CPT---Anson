@@ -1,37 +1,3 @@
-# things to do.
-
-#not even started -->
-#----------------------------- 
-#cutscenes and pngs -----------> Next up
-#lives/shotgun shell mechanic 
-#switch character
-#more preference options
-#win screen
-#charcter progamming and dialouge 
-#listing and bug fixes
-#sfx for encounters -----------> Next up
-
-#NOTE: consider learning classes and reprogramming some of the code to make use of classes.
-#-----------------------------
-
-#in progress -->
-#-----------------------------
-#sound toggle and ambience
-#drawing scenes and characters (12%)
-#gun game mini game (probably about 80% done)
-#code optimization 
-#-----------------------------
-
-#done -->
-#------------------------
-#pressable buttons.
-#startup menu(kind done, still subject to change and modification)
-#bar and combat slider for gun game
-# Game state tracker
-# Escape menu (pause)
-# game over menu
-#-------------------------
-# 
 import pygame
 from pygame import mixer
 import sys
@@ -82,14 +48,14 @@ Button_ignore = pygame.Rect(button_pos_x_main, button_pos_y_main + 450, 175, 70)
 
 #slider(gungame)
 bar_x = SCREEN_WIDTH / 2 - 375
-bar_y = SCREEN_HEIGHT / 2 + 300
+bar_y = SCREEN_HEIGHT / 2 + 425
 slider_x = bar_x
-sliderspeed = 8.5
+sliderspeed = 15    
 
 #critbar(gungame)
 #critbar_pos_x_variable = 960
 
-#music
+#music   
 def musicplay(musicindex):
     mixer.init()
     mixer.music.load(misc[musicindex]) 
@@ -173,7 +139,7 @@ def startupmenu():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if Button_start.collidepoint(event.pos): 
-                    gungame() # main_game() #switch out gungame for cutscene --> main game.
+                    cutscene() # main_game() #switch out gungame for cutscene --> main game.
                     #direct player to gungame if thier life is in danger.
                 if Button_options.collidepoint(event.pos):
                     preference_menu()
@@ -182,6 +148,9 @@ def startupmenu():
                     escape()
 
         screen.fill(BLACK) 
+
+        startuplogo = pygame.image.load("Startupscreen_withname.png")
+        screen.blit(startuplogo, (0, 0))
 
         mouse_pos = pygame.mouse.get_pos()
         button_color_start = get_button_color(Button_soundpref, mouse_pos)
@@ -261,139 +230,61 @@ def escape():
         pygame.display.flip()
         clock.tick(60)
 
-#=======================================================
+#--------------------------
 
-def gungame():
+cutscenes = ["cutscene_1.png", "cutscene_2.png"]
+tutorialtext = ["As you walk through the forest, the sound of crunching snow can be heard under your feet.", 
+                "\"its getting dark\" you think to yourself as you near the hiker's cabin.",
+                "You look at your watch as the freezing wind blows raw against your skin. \"8:00PM\"",
+                "\"I should get back on the road at 8:00AM...\"", 
+                "\"There should be a blizzard on the way. I should help any other people that might be stuck out here.\"", 
+                "As you open the door to the empty cabin, the wind swings the doors open. *The radio's on...*", 
+                "*You enter the cabin* The radio buzzes and switches to a news announcement.",
+                "\"Channel 9 News station reporting from Sagebush county\"",
+                "\"Shocking reports of \"human-like\" creatures roaming around the forests and residential parks of the Sagebush area.",
+                "\"Reports say that these creatures have the ability to imitate human speech and characteristics\"",
+                "\"Please keep all of your doors and windows locked at night and don't call the police. They will not help you.\"",
+                "\"And if a police officer comes to your door, DO NOT open it. There are no patrol members around this area.\"", 
+                "\"Travel in groups during the daytime and stay inside during the night.\"",
+                "\"Ok, moving on. The Sage Bush Ski Resort has opened a new moutain trail ---\""
+                "*You stop listening as the news reporter moves on and starts to ramble on about random stuff*",
+                "What the hell??? *you say to yourself as you stand inside the cabin shaken by the news.*", 
+                "*Suddenly, a knock is heard from your door...*",
+                "PRESS SPACE TO ADVANCE DIALOUGE IN CUTSCENES. PRESS \"F\" KEY OR SPACE TO SHOOT YOUR SHOTGUN.",
+                "COMMUNICATION IS IMPORTANT."
+                "YOU HAVE *3* SHOTGUN SHELLS. BE QUICK TO ATTACK, DO NOT WASTE TIME.",
+                "GOOD LUCK"]
 
-    gamestate = GUNGAME
-    music_sfx_logic(gamestate)
 
-    global slider_x
-    global sliderspeed
-    global critbar_pos_x_var
-    global critbar_size_var
-    global hit_flag
+def cutscene():
+    tutorialtextindx = 0
+    cutscindx = 0
 
-    critbar_pos_x_var = random.randrange(585, 1185)
-    critbar_size_var = random.randrange(75, 150)
-
+    global screen
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_f:
-                    hit_flag = slider_x >= critbar_pos_x_var and slider_x <= critbar_pos_x_var + critbar_size_var #critbar determinate
-                    if hit_flag:
-                        print ('hit') #contine game
-                    else:
-                        gameover() #call game over screen
-                if event.key == pygame.K_ESCAPE:
-                    escape()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_SPACE:
+                    tutorialtextindx += 1
+                    if tutorialtextindx == 7:
+                        cutscindx += 1 #switches scenes
+                    if tutorialtextindx == len(tutorialtext) - 1:
+                        main_game() #directs to main game after finishing cutscene
+
+        cutscimg = pygame.image.load(cutscenes[cutscindx])
 
         screen.fill(BLACK)
 
-        pygame.draw.rect(screen, WHITE, (bar_x, bar_y, 750, 25))
+        screen.blit(cutscimg, (0 , 0))
 
-        #-----------------------------------------------------------------
-        #crit bar
-
-        pygame.draw.rect(screen, RED, (critbar_pos_x_var, bar_y, critbar_size_var, 25))
-
-        #-----------------------------------------------------------------
-        # Combat slider
-
-        slider_x += sliderspeed #get it started
-
-        if slider_x <= bar_x or slider_x + 20 >= bar_x + 750: #rebounder
-            sliderspeed = -sliderspeed
-
-        pygame.draw.rect(screen, GOLD, (slider_x, bar_y - 7.5, 20, 40))
+        rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
+        draw_text(screen, rect, WHITE, (tutorialtext[tutorialtextindx]))
 
         pygame.display.flip()
-        clock.tick(60)
-
-#================================================
-
-#gameover screen & win screen
-
-#unfinished
-
-def gameover():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                    if Button_restart.collidepoint(event.pos):
-                        startupmenu()
-            if event.type == pygame.KEYDOWN:            
-                if event.key == pygame.K_ESCAPE:
-                    escape()      
-                    
-        screen.fill(BLACK) 
-
-        mouse_pos = pygame.mouse.get_pos()
-        button_color_restart = get_button_color(Button_restart, mouse_pos)
-
-        draw_button(screen, Button_restart, button_color_restart, "Restart")
-
-        pygame.display.flip()
-        clock.tick(60)
-
-# ===============================================
-#creating characters and stuff (more coming)
-
-class Character:
-    def __init__(self, name, portrait, isAbnormal, dialoguelist) -> None:
-        self.name = name
-        self.portrait = portrait
-        self.dialogue = dialoguelist
-        self.isAbnormal = isAbnormal
-
-
-
-Backpacker = Character("Backpacker", "backpacker 1920x1080.png", False,
-                      ["Hello... uhm, sorry for the trouble, do you mind if I stay here a bit?... Please I'm cold and it's getting darker.",
-                        "I was hiking around in deeper in the forest when the blizzard hit. I wasn't expecting such weather so I only wore this thin red jacket.",
-                          "The bacpack? Oh, there's a few cans of tomato soup, I'm willing to share, just let me in please."])
-
-Zipperman = Character("Zipper", "zipper.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
-                   "Mind if I kick my feet up for a bit, preferably inside, um, the cabin? hehehe... *he smiles intently*" ,
-                   "Yeah, uhh inside the cabin, um I need to be inside the cabin to be warm... heh.", 
-                   "So let me in because I need to, heh, be w-warm? uhm... *he looks from side to side nervously as you continue to interrogate him*", 
-                   "p-please?",
-                   "*Within the span of a few seconds, his eyes widen and smile widens within his saggy skin*",
-                    "PLEASE MAN!! I HAVENT EATEN IN DAYYYSSSS! AND I CAN TELL THERE ARE A FEW OF YOU IN THERE.... HEH",
-                    "I CAN SMELL YOU.... EH HEH HE" ] )
-
-characters = [Backpacker, Zipperman]
-
-#========================================
-
-ch_id = 0
-
-dialogue_id = 0
-
-current_character = characters[ch_id]
-
-def switch_character(id):
-    global ch_id, dialogue_id, current_character, peephole
-
-    ch_id = id
-    dialogue_id = 0#
-    
-    # if ch_id == len(characters):
-    #         print("you finish good job") #replace with finish screen
-    #         quit()
-
-    current_character = characters[ch_id]
-
-    peephole = pygame.image.load(current_character.portrait)
-
-#---------------------------------
+        clock.tick(60)           
 
 
 #====================================================================
@@ -425,8 +316,11 @@ Backpacker = Character("Backpacker", "backpacker 1920x1080.png", False,
 
 Mother = Character("Mother", "Mother 1920x1080.png", True, 
                    ["H-hello, m-my baby... He's freezing out here. Would you be so kind as to let us in your cabin?", 
-                    "W-what? What's wrong with my baby?",
-                    "He's just different... More importantly, can you let us in?"])
+                    "I was out on at a trail near here and got lost.", 
+                    "Now it's starting to snow and I'm worried there might be a blizzard coming...", 
+                    "Please let us in, my baby is going to freeze to death out here, and so am I.", 
+                    "I dont have anything to give you, thats why I ask you nicely.", 
+                    "Don't make a mother watch her baby freeze to death."])
 
 Zipperman = Character("Zipper", "Zipperman 1920x1080.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
                    "Mind if I kick my feet up for a bit, preferably inside, um, the cabin? hehehe... *he smiles intently*" ,
@@ -438,7 +332,8 @@ Zipperman = Character("Zipper", "Zipperman 1920x1080.png", True, ["Hey man! It's
                     "I CAN SMELL YOU.... EH HEH HE" ] )
 
 Alonewoman = Character("Woman", "Alone Woman 1920x1080.png", True, ["Hey, I was out hiking with some friends and...",
-                        "Well, long story short, we got lost and separated.", 
+                        "Well, long story short, we got lost and separated.",
+                        "One of my buddies was carrying my backpack so I don't have it on me right now." 
                         "I come alone.", 
                         "You know the woods here near the cemetary are dangerous. You should really get out of this area.",
                         "Bbbbuttt I guess that's not for me to say because I'm lost as well...", 
@@ -459,6 +354,64 @@ Gravekeeper = Character("Gravekeeper", "Gravekeeper 1920x1080.png", False, ["Aye
                         "Just let me in sonny... I don't bite. I promise."])
 
 Hehe = Character("Hehe", " hehe.png", True, ["*heavy breathing can be heard from the other side of the door.*"])
+
+Parkranger = Character("Friendly Looking Park Ranger", "Parkranger 1920x1080.png", False, ["*Loudly knocks on the door.*",
+                        "HEY OPEN UP! SAGE BUSH PARK RANGER!",
+                        "...",
+                        "*He coughs to clear his voice.* Ahem, THIS IS THE SAGE BUSH PARK RANGER SERVICE, OPEN UP NOW!!!!",
+                        "...",
+                        "*he sighs*",
+                        "uhhhmmm... hello? anybody in there?...",
+                        "um c-could you please let me in?",
+                        "I-I come from the ski resort nearby.",
+                        "H-have you heard of the new moutain trail opening up soon? heh... *he stands there awkwardly, not knowing what to say.*",
+                        "To be honest, the only reason im here is because the pay seemed good and I wanted alone time to work on my... Hobbies...",
+                        "I was so stupid... I thought it was just going to be like a relaxing getaway where I'm getting paid to do nothing.",
+                        "Turns out, they still make you go out to patrol the area even though there are barely any people that come here.",
+                        "*his eyes start to tear up.* I just wanted to be alone, now I'm stuck here...",
+                        "ughhh- I dont wanna die here man!! *The previous bravado he first had when he knocked is now completely gone.*",
+                        "*He divulges into silence as he waits outside your door.*"])
+
+Graverobber = Character("Grave Robber", "Graverobber 1920x1080.png", False, ["Hi. *he walks up to the door awkwardly*",
+                        "I know you're in there. *he tries to peep back through the peephole.*",
+                        "*Despite claiming he knows you're in there, he tries to open the door, only to be met with sorrow.*",
+                        "*he sighs*",
+                        "Yo guy- Hiker- Whatever... Could you let me in? Its freaking freeeing out here.",
+                        "You hiker types are always so stuck up and paranoid... *he looks to the side spitting on the snow.*",
+                        "Yo, I aint askin, let me in now or I break this freaking door down.",
+                        "...",
+                        "Alright, you asked for it.",
+                        "*A long series of kicks and rattling could be heard from the other side of the door as he desperately attempts to break the door down.",
+                        "*Eventually the kicking and rattling ceases, being replaced by the sound of heavy breathing.",
+                        "hah- Who- hah- Made- hah- This damn door?",
+                        "...",
+                        "*He pulls out a dirty shovel from his backpack.*",
+                        "Last resort!",
+                        "*he repeatedly hits the door with the shovel.*",
+                        "*Alas, it is no use.*",
+                        "...",
+                        "Let me in!... *his tone increases in desperation*"
+                        "Let me in!... *his tone increases in desperation*"
+                        "Let me in!... *his tone increases in desperation*"
+                        "Uh please?"])
+
+Evilwitch = Character("Evil Witch", "Evilwitch 1920x1080.png", False ["*Evil Cackles are heard from the other side of the door.*",
+                        "HEA HAE AHAE HAEA I AM THE EVIL WITCH OF THE WOODS!!! THE EVILEST WITCH OF THEM ALLLLL HAHAEH HEAHHEA!",
+                        "I CAN TELL YOU'RE IN THERE LITTLE PADAWAN...",
+                        "ANSWER MY MYSTERIOUS MYSTICAL RIDDLE!",
+                        "WHAT DO YOU CALL A FLY WITH NO LEGGSSSS?????",
+                        "*Even without a response, the witch continues talking to herself*",
+                        "A WALK! THATS WHAT YOU WOULD CALL IT! HAEHAHEHAHE",
+                        "ANYWAYS... I SENSE A SPECIFIC MAGICAL PRESENCE IN THIS AREA...",
+                        "DO YOU BY CHANCE HAVE A PURPLE GEMSTONE?",
+                        "I'LL MAKE A DEAL WITH YOU YOUNG ONE",
+                        "GIVE ME THE GEMSTONE AND I WILL GIVE YOU *4* SHOTGUN SHELLS.",
+                        "AN EXQUISITE EXCHANGE!!!",
+                        "NOW, WHAT IS YOUR CHOICE?",
+                        "*she taps her fingers together and awaits your answer while glaring evilly in an ambiguous direction(?)*",
+                        "*you'll have to open the door to make the exchange.*"])
+
+Pyromaniac = Character("Pyro Manic")
 
 characters = [Backpacker, Gravekeeper, Alonewoman, Mother, Zipperman]
 #NOTE: REMEMBER TO ADD CHARACTER TO LIST AFTER CREATION.
@@ -527,7 +480,6 @@ def dooropening(ignore):
 
 
 #-------------------------------
-
 switch_character(0)
 
 def main_game():
@@ -609,3 +561,79 @@ def main_game():
         pygame.display.flip()
 
 #=======================================================
+
+shotgun_shells = 3
+
+def gungame():
+    global shotgun_shells, abnormals_killed
+
+    gamestate = GUNGAME
+    music_sfx_logic(gamestate)
+
+    global slider_x
+    global sliderspeed
+    global critbar_pos_x_var
+    global critbar_size_var
+    global hit_flag
+    global shotgun_shells
+    global abnormals_killed
+
+    critbar_pos_x_var = random.randrange(585, 1185)
+    critbar_size_var = random.randrange(75, 150)
+
+    timer = 0
+    delay = 1.8
+    bar_color = RED
+
+    shotgun_text = pygame.font.Font("Dimurphic-Gl6Z.ttf", 60)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_f or pygame.K_SPACE:
+                    if shotgun_shells > 0:
+                        hit_flag = slider_x >= critbar_pos_x_var and slider_x <= critbar_pos_x_var + critbar_size_var #critbar determinate
+                        if hit_flag:
+                            abnormals_killed += 1
+                            shotgun_shells -= 1
+                            switch_character(ch_id + 1)
+                            return
+                        else:
+                            shotgun_shells -= 1
+                            print(shotgun_shells)
+                    else:
+                        gameover()
+                if event.key == pygame.K_ESCAPE:
+                    escape()
+
+        screen.fill(BLACK)
+        killscreen = pygame.image.load("Killscreen 1920x1080.png")
+        screen.blit(killscreen, (0,0))
+
+        pygame.draw.rect(screen, WHITE, (bar_x, bar_y, 750, 25))
+
+        #-----------------------------------------------------------------
+        #crit bar
+
+        pygame.draw.rect(screen, bar_color, (critbar_pos_x_var, bar_y, critbar_size_var, 25))
+
+        #-----------------------------------------------------------------
+        # Combat slider
+
+        slider_x += sliderspeed #get it started
+
+        if slider_x <= bar_x or slider_x + 20 >= bar_x + 750: #rebounder
+            sliderspeed = -sliderspeed
+
+        pygame.draw.rect(screen, GOLD, (slider_x, bar_y - 7.5, 20, 40))
+        
+        shotgun_img = shotgun_text.render(f"{shotgun_shells}", True, (255, 255, 255))
+        screen.blit(shotgun_img, (SCREEN_WIDTH - shotgun_img.get_width(), 0))
+
+        pygame.display.flip()
+        clock.tick(60)
+
+#================================================
