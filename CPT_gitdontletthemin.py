@@ -527,3 +527,85 @@ def dooropening(ignore):
 
 
 #-------------------------------
+
+switch_character(0)
+
+def main_game():
+    global dialogue_id, normals_saved, normals_rejected, abnormals_killed, abnormals_rejected, ignore
+
+    hour = 8
+
+    period = "PM"
+
+    (looking) = False
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_ESCAPE:
+                    escape()
+                if event.key == pygame.K_SPACE:
+                    dialogue_id += 1
+                    if dialogue_id >= len(current_character.dialogue):
+                        dialogue_id = 0
+            if event.type == pygame.MOUSEBUTTONDOWN: 
+                if Button_talk.collidepoint(event.pos):
+                    dialogue_id += 1
+                    if dialogue_id >= len(current_character.dialogue):
+                        dialogue_id = 0
+                if Button_look.collidepoint(event.pos):
+                     (looking) = not (looking)
+                if Button_letin.collidepoint(event.pos):
+                    hour += 1
+                    dooropening(False)
+                    if current_character.isAbnormal:
+                        gungame()
+                    else:
+                        normals_saved += 1
+                        switch_character(ch_id + 1)
+                if Button_ignore.collidepoint(event.pos):
+                    hour += 1
+                    dooropening(True)
+                    if current_character.isAbnormal:
+                        abnormals_rejected += 1
+                    else:
+                        normals_rejected += 1
+                    switch_character(ch_id + 1)
+            
+
+        screen.fill(BLACK)
+
+        time = f"{hour}:00{period}"
+
+        if hour > 12:
+            period = "AM"
+            hour = 1
+
+        if ((looking)):
+            screen.blit(peephole, (0,0))
+        else:
+            screen.blit(door, (0,0))
+
+        mouse_pos = pygame.mouse.get_pos()
+        button_color_talk = get_button_color(Button_talk, mouse_pos)
+        button_color_look = get_button_color(Button_look, mouse_pos)
+        button_color_letin = get_button_color(Button_letin, mouse_pos)
+        button_color_ignore = get_button_color(Button_ignore, mouse_pos)
+
+        draw_button(screen, Button_talk, button_color_talk, "Talk")
+        draw_button(screen, Button_look, button_color_look, "Look")
+        draw_button(screen, Button_letin, button_color_letin, "Let Them In")  
+        draw_button(screen, Button_ignore, button_color_ignore, "Ignore")
+
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(f"{time}", True, WHITE)
+        screen.blit(text_surface, (100, 100))
+
+        rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 75, 1500, 40) 
+        draw_text(screen, rect, WHITE, (current_character.dialogue[dialogue_id]))
+
+        pygame.display.flip()
+
+#=======================================================
