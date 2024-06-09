@@ -6,8 +6,8 @@ import random
 pygame.init()
 
 #constants
-BUTTON_COLOR = (192, 192, 192)
-BUTTON_HOVER_COLOR = (120, 120, 120)
+BUTTON_COLOR = (225, 225, 225)
+BUTTON_HOVER_COLOR = (150, 150, 150)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -23,9 +23,14 @@ size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 button_pos_x = SCREEN_WIDTH / 2 - 100
 button_pos_y_start = SCREEN_HEIGHT / 2 + 225
 button_pos_y_options = SCREEN_HEIGHT / 2 + 300
+button_pos_y_store = SCREEN_HEIGHT / 2 + 375
 
 Button_start = pygame.Rect(button_pos_x, button_pos_y_start, 200, 50)
 Button_options = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
+Button_store =pygame.Rect(button_pos_x, button_pos_y_store, 200, 50)
+
+#store buttons
+Button_openbox = pygame.Rect(button_pos_x, button_pos_y_options, 225, 50)
 
 #preference buttons
 Button_soundpref = pygame.Rect(button_pos_x, button_pos_y_start, 200, 50)
@@ -143,6 +148,8 @@ def startupmenu():
                     #direct player to gungame if thier life is in danger.
                 if Button_options.collidepoint(event.pos):
                     preference_menu()
+                # if Button_store.collidepoint(event.pos):
+                #     stickergallery()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     escape()
@@ -155,14 +162,48 @@ def startupmenu():
         mouse_pos = pygame.mouse.get_pos()
         button_color_start = get_button_color(Button_soundpref, mouse_pos)
         button_color_preferences = get_button_color(Button_back, mouse_pos)
+        button_color_store = get_button_color(Button_store, mouse_pos)
 
         draw_button(screen, Button_start, button_color_start, "Start")
         draw_button(screen, Button_options, button_color_preferences, "Preferences")
+        draw_button(screen, Button_store, button_color_store, "Store")
 
         pygame.display.flip()
         clock.tick(60)
 
 #=============================================
+
+# def stickergallery():
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 sys.exit()
+#             elif event.type == pygame.MOUSEBUTTONDOWN:
+#                 if Button_openbox.collidepoint(event.pos):
+#                     print("open")
+#                     #replace with open box animation
+#                     #probablity function
+
+#         # cutscimg = pygame.image.load(cutscenes[cutscindx])
+
+#         screen.fill(BLACK)
+
+#         mouse_pos = pygame.mouse.get_pos()
+#         button_color_openbox = get_button_color(Button_openbox, mouse_pos)
+        
+#         draw_button(screen, Button_openbox, button_color_openbox, "Open")
+
+#         # screen.blit(cutscimg, (0 , 0))
+
+#         pygame.display.flip()
+#         clock.tick(60)
+
+# def probability(sticker_id):
+#     sticker_id = random.randrange(1, 12)
+
+
+#===========================================
 
 misccounter = 1
 
@@ -246,12 +287,12 @@ tutorialtext = ["As you walk through the forest, the sound of crunching snow can
                 "\"Please keep all of your doors and windows locked at night and don't call the police. They will not help you.\"",
                 "\"And if a police officer comes to your door, DO NOT open it. There are no patrol members around this area.\"", 
                 "\"Travel in groups during the daytime and stay inside during the night.\"",
-                "\"Ok, moving on. The Sage Bush Ski Resort has opened a new moutain trail ---\""
+                "\"Ok, moving on. The Sage Bush Ski Resort has opened a new moutain trail ---\"",
                 "*You stop listening as the news reporter moves on and starts to ramble on about random stuff*",
                 "What the hell??? *you say to yourself as you stand inside the cabin shaken by the news.*", 
                 "*Suddenly, a knock is heard from your door...*",
                 "PRESS SPACE TO ADVANCE DIALOUGE IN CUTSCENES. PRESS \"F\" KEY OR SPACE TO SHOOT YOUR SHOTGUN.",
-                "COMMUNICATION IS IMPORTANT."
+                "COMMUNICATION IS IMPORTANT.",
                 "YOU HAVE *3* SHOTGUN SHELLS. BE QUICK TO ATTACK, DO NOT WASTE TIME.",
                 "GOOD LUCK"]
 
@@ -395,7 +436,7 @@ Graverobber = Character("Grave Robber", "Graverobber 1920x1080.png", False, ["Hi
                         "Let me in!... *his tone increases in desperation*"
                         "Uh please?"])
 
-Evilwitch = Character("Evil Witch", "Evilwitch 1920x1080.png", False ["*Evil Cackles are heard from the other side of the door.*",
+Evilwitch = Character("Evil Witch", "Evilwitch 1920x1080.png", False, ["*Evil Cackles are heard from the other side of the door.*",
                         "HEA HAE AHAE HAEA I AM THE EVIL WITCH OF THE WOODS!!! THE EVILEST WITCH OF THEM ALLLLL HAHAEH HEAHHEA!",
                         "I CAN TELL YOU'RE IN THERE LITTLE PADAWAN...",
                         "ANSWER MY MYSTERIOUS MYSTICAL RIDDLE!",
@@ -411,7 +452,7 @@ Evilwitch = Character("Evil Witch", "Evilwitch 1920x1080.png", False ["*Evil Cac
                         "*she taps her fingers together and awaits your answer while glaring evilly in an ambiguous direction(?)*",
                         "*you'll have to open the door to make the exchange.*"])
 
-Pyromaniac = Character("Pyro Manic")
+# Pyromaniac = Character("PyroManiac")
 
 characters = [Backpacker, Gravekeeper, Alonewoman, Mother, Zipperman]
 #NOTE: REMEMBER TO ADD CHARACTER TO LIST AFTER CREATION.
@@ -489,24 +530,39 @@ def main_game():
 
     period = "PM"
 
+    dialogue_countdown = 0.5
+    dialogue_index = 1
+
+    DT = 1/60
+
     (looking) = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:            
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     escape()
                 if event.key == pygame.K_SPACE:
-                    dialogue_id += 1
-                    if dialogue_id >= len(current_character.dialogue):
-                        dialogue_id = 0
+                    if dialogue_index <  len(current_character.dialogue[dialogue_id]):
+                        dialogue_index = len(current_character.dialogue[dialogue_id])
+                    else:
+                        dialogue_index = 0
+
+                        dialogue_id += 1
+                        if dialogue_id >= len(current_character.dialogue):
+                            dialogue_id = 0
             if event.type == pygame.MOUSEBUTTONDOWN: 
                 if Button_talk.collidepoint(event.pos):
-                    dialogue_id += 1
-                    if dialogue_id >= len(current_character.dialogue):
-                        dialogue_id = 0
+                    if dialogue_index <  len(current_character.dialogue[dialogue_id]):
+                        dialogue_index = len(current_character.dialogue[dialogue_id])
+                    else:
+                        dialogue_index = 0
+
+                        dialogue_id += 1
+                        if dialogue_id >= len(current_character.dialogue):
+                            dialogue_id = 0
                 if Button_look.collidepoint(event.pos):
                      (looking) = not (looking)
                 if Button_letin.collidepoint(event.pos):
@@ -555,10 +611,21 @@ def main_game():
         text_surface = font.render(f"{time}", True, WHITE)
         screen.blit(text_surface, (100, 100))
 
+        dialogue_countdown -= DT
+        if dialogue_countdown < 0 and dialogue_index < len(current_character.dialogue[dialogue_id]):
+            dialogue_index += 1
+            if current_character.dialogue[dialogue_id][dialogue_index-1] == '.':
+                dialogue_countdown = 0.5
+            elif current_character.dialogue[dialogue_id][dialogue_index-1] == ',':
+                dialogue_countdown = 0.3
+            else:
+                dialogue_countdown = 0.0001
+
         rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 75, 1500, 40) 
-        draw_text(screen, rect, WHITE, (current_character.dialogue[dialogue_id]))
+        draw_text(screen, rect, WHITE, (current_character.dialogue[dialogue_id][:dialogue_index]))
 
         pygame.display.flip()
+        DT = clock.tick(60) / 1000
 
 #=======================================================
 
@@ -637,3 +704,74 @@ def gungame():
         clock.tick(60)
 
 #================================================
+
+#gameover screen & win screen
+
+fcutscenetext = ["fart", "fart1"]
+
+def finishscreen():
+    fcutscenetextindx = 0
+    
+    timer = 0
+    delay = 3
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_SPACE:
+                    fcutscenetextindx += 1
+                    if fcutscenetextindx >= len(fcutscenetext):
+                        scorekeepermenu()
+
+        dooropen = pygame.image.load("startupscreen.png") # REPLACE WITH ENDING 1 - ESCAPE
+        screen.fill(BLACK)
+
+        screen.blit(dooropen, (0 , 0))
+
+        timer += 1/60
+        if timer >= delay:
+            scorekeepermenu()
+
+        rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
+        draw_text(screen, rect, WHITE, (fcutscenetext[fcutscenetextindx]))
+
+        pygame.display.flip()
+        clock.tick(60)   
+
+#unfinished
+#score keeper
+
+
+def scorekeepermenu():
+    
+    font = pygame.font.Font("Dimurphic-Gl6Z.ttf", 60)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_SPACE:
+                    startupmenu()
+
+        screen.fill(BLACK)
+
+        font = pygame.font.Font(None, 75)
+        text_surface = font.render(f"Normals saved: {normals_saved}", True, WHITE)
+        screen.blit(text_surface, (400, 200))
+
+        text_surface = font.render(f"Normals reject: {normals_rejected}", True, WHITE)
+        screen.blit(text_surface, (400, 400))
+
+        text_surface = font.render(f"Abnormals killed: {abnormals_killed}", True, WHITE)
+        screen.blit(text_surface, (400, 600))
+
+        text_surface = font.render(f"Abnormals rejected: {abnormals_rejected}", True, WHITE)
+        screen.blit(text_surface, (400, 800))
+
+        pygame.display.flip()
+        clock.tick(60)
