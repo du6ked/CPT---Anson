@@ -183,7 +183,7 @@ def startupmenu():
 #                 if Button_openbox.collidepoint(event.pos):
 #                     print("open")
 #                     #replace with open box animation
-#                     #probablity function
+#                     #depending on what ending they get, give them a trophy.
 
 #         # cutscimg = pygame.image.load(cutscenes[cutscindx])
 
@@ -198,9 +198,6 @@ def startupmenu():
 
 #         pygame.display.flip()
 #         clock.tick(60)
-
-# def probability(sticker_id):
-#     sticker_id = random.randrange(1, 12)
 
 
 #===========================================
@@ -775,3 +772,32 @@ def scorekeepermenu():
 
         pygame.display.flip()
         clock.tick(60)
+
+def gameover():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    if Button_restart.collidepoint(event.pos):
+                        startupmenu()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_ESCAPE:
+                    escape()      
+                    
+        screen.fill(BLACK) 
+
+        mouse_pos = pygame.mouse.get_pos()
+        button_color_restart = get_button_color(Button_restart, mouse_pos)
+
+        draw_button(screen, Button_restart, button_color_restart, "Restart")
+
+        pygame.display.flip()
+        clock.tick(60)
+                    
+#================================================================
+
+startupmenu()
+pygame.quit()
+sys.exit()
