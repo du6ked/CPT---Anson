@@ -1,37 +1,3 @@
-# things to do.
-
-#not even started -->
-#----------------------------- 
-#cutscenes and pngs -----------> Next up
-#lives/shotgun shell mechanic 
-#switch character
-#more preference options
-#win screen
-#charcter progamming and dialouge 
-#listing and bug fixes
-#sfx for encounters -----------> Next up
-
-#NOTE: consider learning classes and reprogramming some of the code to make use of classes.
-#-----------------------------
-
-#in progress -->
-#-----------------------------
-#sound toggle and ambience
-#drawing scenes and characters (12%)
-#gun game mini game (probably about 80% done)
-#code optimization 
-#-----------------------------
-
-#done -->
-#------------------------
-#pressable buttons.
-#startup menu(kind done, still subject to change and modification)
-#bar and combat slider for gun game
-# Game state tracker
-# Escape menu (pause)
-# game over menu
-#-------------------------
-# 
 import pygame
 from pygame import mixer
 import sys
@@ -357,7 +323,7 @@ Backpacker = Character("Backpacker", "Game stills/portraits/backpacker 1920x1080
                           "The bacpack? Oh- I-I have some food and supplies I can share if that helps.",
                            "I just really need some shelter right now. Can you please let me in? I would be so grateful."])
 
-Mother = Character("Mother", "Game stills/portraits/Mother 1920x1080.png", True, 
+Mother = Character("Mother", "Game stills/portraits/mother 1920x1080.png", True, 
                    ["H-hello, m-my baby... He's freezing out here. Would you be so kind as to let us in your cabin?", 
                     "I was out on at a trail near here and got lost.", 
                     "Now it's starting to snow and I'm worried there might be a blizzard coming...", 
@@ -365,7 +331,7 @@ Mother = Character("Mother", "Game stills/portraits/Mother 1920x1080.png", True,
                     "I dont have anything to give you, thats why I ask you nicely.", 
                     "Don't make a mother watch her baby freeze to death."])
 
-Zipperman = Character("Zipper", "Game stills/portraits/Zipperman 1920x1080.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
+Zipperman = Character("Zipper", "Game stills/portraits/zipperman 1920x1080.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
                    "Mind if I kick my feet up for a bit, preferably inside, um, the cabin? hehehe... *he smiles intently*" ,
                    "Yeah, uhh inside the cabin, um I need to be inside the cabin to be warm... heh.", 
                    "So let me in because I need to, heh, be w-warm? uhm... *he looks from side to side nervously as you continue to interrogate him*", 
@@ -374,7 +340,7 @@ Zipperman = Character("Zipper", "Game stills/portraits/Zipperman 1920x1080.png",
                     "PLEASE MAN!! I HAVENT EATEN IN DAYYYSSSS! AND I CAN TELL THERE ARE A FEW OF YOU IN THERE.... HEH",
                     "I CAN SMELL YOU.... EH HEH HE" ] )
 
-Alonewoman = Character("Woman", "Game stills/portraits/Alone Woman 1920x1080.png", True, ["Hey, I was out hiking with some friends and...",
+Alonewoman = Character("Woman", "Game stills/portraits/alonewoman 1920x1080.png", True, ["Hey, I was out hiking with some friends and...",
                         "Well, long story short, we got lost and separated.",
                         "One of my buddies was carrying my backpack so I don't have it on me right now." 
                         "I come alone.", 
@@ -384,7 +350,7 @@ Alonewoman = Character("Woman", "Game stills/portraits/Alone Woman 1920x1080.png
                         "Hello? *The door handle shakes as she tries to open the door*",
                         "I can tell somebody's here by the fact that the door is locked."])
 
-Gravekeeper = Character("Gravekeeper", "Game stills/portraits/Gravekeeper 1920x1080.png", False, ["Aye! *he bangs on the door* Who be in there? *He attempts to peer through the cracks of the wooden door.*",
+Gravekeeper = Character("Gravekeeper", "Game stills/portraits/gravekeeper 1920x1080.png", False, ["Aye! *he bangs on the door* Who be in there? *He attempts to peer through the cracks of the wooden door.*",
                         "Aye these youngins nowadays...",
                         "*he clicks his tounge and spits on the snow as he take a swig of what looks like whiskey out of a small metal flask.*",
                         "Least I know that I made the dead bolts strong enough...", 
@@ -398,7 +364,7 @@ Gravekeeper = Character("Gravekeeper", "Game stills/portraits/Gravekeeper 1920x1
 
 Hehe = Character("Hehe", "Game stills/portraits/hehe.png", True, ["*heavy breathing can be heard from the other side of the door.*"])
 
-Parkranger = Character("Friendly Looking Park Ranger", "Game stills/portraits/Parkranger 1920x1080.png", False, ["*Loudly knocks on the door.*",
+Parkranger = Character("Friendly Looking Park Ranger", "Game stills/portraits/parkranger 1920x1080.png", False, ["*Loudly knocks on the door.*",
                         "HEY OPEN UP! SAGE BUSH PARK RANGER!",
                         "...",
                         "*He coughs to clear his voice.* Ahem, THIS IS THE SAGE BUSH PARK RANGER SERVICE, OPEN UP NOW!!!!",
@@ -415,7 +381,7 @@ Parkranger = Character("Friendly Looking Park Ranger", "Game stills/portraits/Pa
                         "ughhh- I dont wanna die here man!! *The previous bravado he first had when he knocked is now completely gone.*",
                         "*He divulges into silence as he waits outside your door.*"])
 
-Graverobber = Character("Grave Robber", "Game stills/portraits/Graverobber 1920x1080.png", False, ["Hi. *he walks up to the door awkwardly*",
+Graverobber = Character("Grave Robber", "Game stills/portraits/graverobber 1920x1080.png", False, ["Hi. *he walks up to the door awkwardly*",
                         "I know you're in there. *he tries to peep back through the peephole.*",
                         "*Despite claiming he knows you're in there, he tries to open the door, only to be met with sorrow.*",
                         "*he sighs*",
@@ -433,12 +399,12 @@ Graverobber = Character("Grave Robber", "Game stills/portraits/Graverobber 1920x
                         "*he repeatedly hits the door with the shovel.*",
                         "*Alas, it is no use.*",
                         "...",
-                        "Let me in!... *his tone increases in desperation*"
-                        "Let me in!... *his tone increases in desperation*"
-                        "Let me in!... *his tone increases in desperation*"
+                        "Let me in!... *his tone increases in desperation*",
+                        "Let me in!... *his tone increases in desperation*",
+                        "Let me in!... *his tone increases in desperation*",
                         "Uh please?"])
 
-Evilwitch = Character("Evil Witch", "Game stills/portraits/Evilwitch 1920x1080.png", False, ["*Evil Cackles are heard from the other side of the door.*",
+Evilwitch = Character("Evil Witch", "Game stills/portraits/evilwitch 1920x1080.png", False, ["*Evil Cackles are heard from the other side of the door.*",
                         "HEA HAE AHAE HAEA I AM THE EVIL WITCH OF THE WOODS!!! THE EVILEST WITCH OF THEM ALLLLL HAHAEH HEAHHEA!",
                         "I CAN TELL YOU'RE IN THERE LITTLE PADAWAN...",
                         "ANSWER MY MYSTERIOUS MYSTICAL RIDDLE!",
@@ -456,7 +422,7 @@ Evilwitch = Character("Evil Witch", "Game stills/portraits/Evilwitch 1920x1080.p
 
 # Pyromaniac = Character("PyroManiac")
 
-characters = [Backpacker, Gravekeeper, Alonewoman, Mother, Zipperman]
+characters = [Backpacker, Gravekeeper, Graverobber, Alonewoman, Parkranger, Evilwitch, Mother, Zipperman, Hehe]
 #NOTE: REMEMBER TO ADD CHARACTER TO LIST AFTER CREATION.
 #--------------------------
 
@@ -484,7 +450,7 @@ def switch_character(id):
 font_1 = pygame.font.Font("Dimurphic-Gl6Z.ttf", 20)
 
 # peephole = pygame.image.load(current_character.portrait)
-door = pygame.image.load("Game stills/door_1920x1080.png")
+door = pygame.image.load("Game stills/main/door_1920x1080.png")
 
 def draw_text(screen, rect, color, text):
     pygame.draw.rect(screen, color, rect)
@@ -711,7 +677,7 @@ def gungame():
                     escape()
 
         screen.fill(BLACK)
-        killscreen = pygame.image.load("Game stills/killscreen 1920x1080.png")
+        killscreen = pygame.image.load("Game stills/main/killscreen 1920x1080.png")
         screen.blit(killscreen, (0,0))
 
         pygame.draw.rect(screen, WHITE, (bar_x, bar_y, 750, 25))
@@ -793,13 +759,13 @@ class Ending:
         self.text_pos = 0 #track letter postion
         
 
-hunter = Ending("Hunter", "Game stills/cutscenes/endings/Hunter.png", ["This is the hunter ending.",
+hunter = Ending("Hunter", "Game stills/cutscenes/endings/hunter.png", ["This is the hunter ending.",
                                                                               "Kill all of the abnormals to get it"])
 
 ignorance = Ending("Ignorance", "Game stills/cutscenes/endings/ignorance.png", ["This is the ignorance ending.",
                                                                                        "Ignore everyone to get it."])
 
-liberation = Ending("liberation", "Game stills/cutscenes/endings/liberation!.png", ["This is the liberation ending.",
+liberation = Ending("liberation", "Game stills/cutscenes/endings/liberation.png", ["This is the liberation ending.",
                                                                                            "Save everyone to get it."])
 
 escap_e = Ending("escape", "Game stills/cutscenes/endings/escape.png", ["This is the escape ending.",
@@ -835,7 +801,7 @@ def finishscreen():
                     current_ending.index += 1
                     current_ending.text_pos = 0  # Reset text position
                     if current_ending.index >= len(current_ending.endtext):
-                        current_ending.index = 0
+                        scorekeepermenu()
 
         screen.fill(BLACK)
 
