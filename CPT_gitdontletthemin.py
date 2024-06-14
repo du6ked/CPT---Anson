@@ -1,3 +1,37 @@
+# things to do.
+
+#not even started -->
+#----------------------------- 
+#cutscenes and pngs -----------> Next up
+#lives/shotgun shell mechanic 
+#switch character
+#more preference options
+#win screen
+#charcter progamming and dialouge 
+#listing and bug fixes
+#sfx for encounters -----------> Next up
+
+#NOTE: consider learning classes and reprogramming some of the code to make use of classes.
+#-----------------------------
+
+#in progress -->
+#-----------------------------
+#sound toggle and ambience
+#drawing scenes and characters (12%)
+#gun game mini game (probably about 80% done)
+#code optimization 
+#-----------------------------
+
+#done -->
+#------------------------
+#pressable buttons.
+#startup menu(kind done, still subject to change and modification)
+#bar and combat slider for gun game
+# Game state tracker
+# Escape menu (pause)
+# game over menu
+#-------------------------
+# 
 import pygame
 from pygame import mixer
 import sys
@@ -27,7 +61,7 @@ button_pos_y_store = SCREEN_HEIGHT / 2 + 375
 
 Button_start = pygame.Rect(button_pos_x, button_pos_y_start, 200, 50)
 Button_options = pygame.Rect(button_pos_x, button_pos_y_options, 200, 50)
-Button_store =pygame.Rect(button_pos_x, button_pos_y_store, 200, 50)
+Button_achieve =pygame.Rect(button_pos_x, button_pos_y_store, 200, 50)
 
 #store buttons
 Button_openbox = pygame.Rect(button_pos_x, button_pos_y_options, 225, 50)
@@ -67,7 +101,7 @@ def musicplay(musicindex):
     mixer.music.set_volume(1)
     mixer.music.play(-1) 
 
-misc = ["startup_ambient.mp3"]
+misc = ["music_sfx/startup_ambient.mp3"]
 
 def soundfx(sfxindex):
     mixer.init()
@@ -75,7 +109,7 @@ def soundfx(sfxindex):
     mixer.music.set_volume(5)
     mixer.music.play(-1) 
 
-sfx = ["knocking.mp3", "abnormal_encounter.mp3"]
+sfx = ["music_sfx/knocking.mp3", "music_sfx/abnormal_encounter.mp3"]
 
 #char
 
@@ -148,57 +182,28 @@ def startupmenu():
                     #direct player to gungame if thier life is in danger.
                 if Button_options.collidepoint(event.pos):
                     preference_menu()
-                # if Button_store.collidepoint(event.pos):
-                #     stickergallery()
+                if Button_achieve.collidepoint(event.pos):
+                    stickergallery()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     escape()
 
         screen.fill(BLACK) 
 
-        startuplogo = pygame.image.load("Startupscreen_withname.png")
+        startuplogo = pygame.image.load("Game stills/cutscenes/start/Startupscreen_withname.png")
         screen.blit(startuplogo, (0, 0))
 
         mouse_pos = pygame.mouse.get_pos()
         button_color_start = get_button_color(Button_soundpref, mouse_pos)
         button_color_preferences = get_button_color(Button_back, mouse_pos)
-        button_color_store = get_button_color(Button_store, mouse_pos)
+        button_color_achieve = get_button_color(Button_achieve, mouse_pos)
 
         draw_button(screen, Button_start, button_color_start, "Start")
         draw_button(screen, Button_options, button_color_preferences, "Preferences")
-        draw_button(screen, Button_store, button_color_store, "Store")
+        draw_button(screen, Button_achieve, button_color_achieve, "Achievements")
 
         pygame.display.flip()
         clock.tick(60)
-
-#=============================================
-
-# def stickergallery():
-#     while True:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-#             elif event.type == pygame.MOUSEBUTTONDOWN:
-#                 if Button_openbox.collidepoint(event.pos):
-#                     print("open")
-#                     #replace with open box animation
-#                     #depending on what ending they get, give them a trophy.
-
-#         # cutscimg = pygame.image.load(cutscenes[cutscindx])
-
-#         screen.fill(BLACK)
-
-#         mouse_pos = pygame.mouse.get_pos()
-#         button_color_openbox = get_button_color(Button_openbox, mouse_pos)
-        
-#         draw_button(screen, Button_openbox, button_color_openbox, "Open")
-
-#         # screen.blit(cutscimg, (0 , 0))
-
-#         pygame.display.flip()
-#         clock.tick(60)
-
 
 #===========================================
 
@@ -270,7 +275,7 @@ def escape():
 
 #--------------------------
 
-cutscenes = ["cutscene_1.png", "cutscene_2.png"]
+cutscenes = ["Game stills/cutscenes/start/Cutscene_1.png", "Game stills/cutscenes/start/cutscene_2.png"]
 tutorialtext = ["As you walk through the forest, the sound of crunching snow can be heard under your feet.", 
                 "\"its getting dark\" you think to yourself as you near the hiker's cabin.",
                 "You look at your watch as the freezing wind blows raw against your skin. \"8:00PM\"",
@@ -342,7 +347,7 @@ class Character:
         self.dialogue = dialoguelist
         self.isAbnormal = isAbnormal
 
-Backpacker = Character("Backpacker", "backpacker 1920x1080.png", False,
+Backpacker = Character("Backpacker", "Game stills/portraits/backpacker 1920x1080.png", False,
                       ["Hello... uhm, sorry for the trouble, do you mind if I stay here a bit?... Please I'm cold and it's getting darker.",
                        "Is anyone home? I'm so sorry to bother you, but I'm in a really tough spot.",
                        "My name's Alex, and I'm a backpacker who got caught in this blizzard.",
@@ -352,7 +357,7 @@ Backpacker = Character("Backpacker", "backpacker 1920x1080.png", False,
                           "The bacpack? Oh- I-I have some food and supplies I can share if that helps.",
                            "I just really need some shelter right now. Can you please let me in? I would be so grateful."])
 
-Mother = Character("Mother", "Mother 1920x1080.png", True, 
+Mother = Character("Mother", "Game stills/portraits/Mother 1920x1080.png", True, 
                    ["H-hello, m-my baby... He's freezing out here. Would you be so kind as to let us in your cabin?", 
                     "I was out on at a trail near here and got lost.", 
                     "Now it's starting to snow and I'm worried there might be a blizzard coming...", 
@@ -360,7 +365,7 @@ Mother = Character("Mother", "Mother 1920x1080.png", True,
                     "I dont have anything to give you, thats why I ask you nicely.", 
                     "Don't make a mother watch her baby freeze to death."])
 
-Zipperman = Character("Zipper", "Zipperman 1920x1080.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
+Zipperman = Character("Zipper", "Game stills/portraits/Zipperman 1920x1080.png", True, ["Hey man! It's abosolutely freezing outside out here don't you agree? hehehe..." ,
                    "Mind if I kick my feet up for a bit, preferably inside, um, the cabin? hehehe... *he smiles intently*" ,
                    "Yeah, uhh inside the cabin, um I need to be inside the cabin to be warm... heh.", 
                    "So let me in because I need to, heh, be w-warm? uhm... *he looks from side to side nervously as you continue to interrogate him*", 
@@ -369,7 +374,7 @@ Zipperman = Character("Zipper", "Zipperman 1920x1080.png", True, ["Hey man! It's
                     "PLEASE MAN!! I HAVENT EATEN IN DAYYYSSSS! AND I CAN TELL THERE ARE A FEW OF YOU IN THERE.... HEH",
                     "I CAN SMELL YOU.... EH HEH HE" ] )
 
-Alonewoman = Character("Woman", "Alone Woman 1920x1080.png", True, ["Hey, I was out hiking with some friends and...",
+Alonewoman = Character("Woman", "Game stills/portraits/Alone Woman 1920x1080.png", True, ["Hey, I was out hiking with some friends and...",
                         "Well, long story short, we got lost and separated.",
                         "One of my buddies was carrying my backpack so I don't have it on me right now." 
                         "I come alone.", 
@@ -379,7 +384,7 @@ Alonewoman = Character("Woman", "Alone Woman 1920x1080.png", True, ["Hey, I was 
                         "Hello? *The door handle shakes as she tries to open the door*",
                         "I can tell somebody's here by the fact that the door is locked."])
 
-Gravekeeper = Character("Gravekeeper", "Gravekeeper 1920x1080.png", False, ["Aye! *he bangs on the door* Who be in there? *He attempts to peer through the cracks of the wooden door.*",
+Gravekeeper = Character("Gravekeeper", "Game stills/portraits/Gravekeeper 1920x1080.png", False, ["Aye! *he bangs on the door* Who be in there? *He attempts to peer through the cracks of the wooden door.*",
                         "Aye these youngins nowadays...",
                         "*he clicks his tounge and spits on the snow as he take a swig of what looks like whiskey out of a small metal flask.*",
                         "Least I know that I made the dead bolts strong enough...", 
@@ -391,9 +396,9 @@ Gravekeeper = Character("Gravekeeper", "Gravekeeper 1920x1080.png", False, ["Aye
                         "The name's John. I'm the gravekeeper around these here parts.", 
                         "Just let me in sonny... I don't bite. I promise."])
 
-Hehe = Character("Hehe", " hehe.png", True, ["*heavy breathing can be heard from the other side of the door.*"])
+Hehe = Character("Hehe", "Game stills/portraits/hehe.png", True, ["*heavy breathing can be heard from the other side of the door.*"])
 
-Parkranger = Character("Friendly Looking Park Ranger", "Parkranger 1920x1080.png", False, ["*Loudly knocks on the door.*",
+Parkranger = Character("Friendly Looking Park Ranger", "Game stills/portraits/Parkranger 1920x1080.png", False, ["*Loudly knocks on the door.*",
                         "HEY OPEN UP! SAGE BUSH PARK RANGER!",
                         "...",
                         "*He coughs to clear his voice.* Ahem, THIS IS THE SAGE BUSH PARK RANGER SERVICE, OPEN UP NOW!!!!",
@@ -410,7 +415,7 @@ Parkranger = Character("Friendly Looking Park Ranger", "Parkranger 1920x1080.png
                         "ughhh- I dont wanna die here man!! *The previous bravado he first had when he knocked is now completely gone.*",
                         "*He divulges into silence as he waits outside your door.*"])
 
-Graverobber = Character("Grave Robber", "Graverobber 1920x1080.png", False, ["Hi. *he walks up to the door awkwardly*",
+Graverobber = Character("Grave Robber", "Game stills/portraits/Graverobber 1920x1080.png", False, ["Hi. *he walks up to the door awkwardly*",
                         "I know you're in there. *he tries to peep back through the peephole.*",
                         "*Despite claiming he knows you're in there, he tries to open the door, only to be met with sorrow.*",
                         "*he sighs*",
@@ -433,7 +438,7 @@ Graverobber = Character("Grave Robber", "Graverobber 1920x1080.png", False, ["Hi
                         "Let me in!... *his tone increases in desperation*"
                         "Uh please?"])
 
-Evilwitch = Character("Evil Witch", "Evilwitch 1920x1080.png", False, ["*Evil Cackles are heard from the other side of the door.*",
+Evilwitch = Character("Evil Witch", "Game stills/portraits/Evilwitch 1920x1080.png", False, ["*Evil Cackles are heard from the other side of the door.*",
                         "HEA HAE AHAE HAEA I AM THE EVIL WITCH OF THE WOODS!!! THE EVILEST WITCH OF THEM ALLLLL HAHAEH HEAHHEA!",
                         "I CAN TELL YOU'RE IN THERE LITTLE PADAWAN...",
                         "ANSWER MY MYSTERIOUS MYSTICAL RIDDLE!",
@@ -468,7 +473,7 @@ def switch_character(id):
     dialogue_id = 0#
     
     if ch_id == len(characters):
-            finishscreen()
+        finishscreen()
 
     current_character = characters[ch_id]
 
@@ -479,7 +484,7 @@ def switch_character(id):
 font_1 = pygame.font.Font("Dimurphic-Gl6Z.ttf", 20)
 
 # peephole = pygame.image.load(current_character.portrait)
-door = pygame.image.load("door_1920x1080.png")
+door = pygame.image.load("Game stills/door_1920x1080.png")
 
 def draw_text(screen, rect, color, text):
     pygame.draw.rect(screen, color, rect)
@@ -626,6 +631,37 @@ def main_game():
 
 #=======================================================
 
+def afterkill():
+
+    timer = 0
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(BLACK)
+
+        killmessage = "you killed it........"
+
+        timer += 1/10
+
+        letter = int(timer)
+        letter = letter
+
+        if letter >= len(killmessage):
+            return
+        
+
+        rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
+        draw_text(screen, rect, WHITE, (killmessage[:letter]))
+
+        pygame.display.flip()
+        clock.tick(60)     
+
+#===================================================
+
 shotgun_shells = 3
 
 def gungame():
@@ -646,10 +682,10 @@ def gungame():
     critbar_size_var = random.randrange(75, 150)
 
     timer = 0
-    delay = 1.8
+    delay = 5
     bar_color = RED
 
-    shotgun_text = pygame.font.Font("Dimurphic-Gl6Z.ttf", 60)
+    text = pygame.font.Font("Dimurphic-Gl6Z.ttf", 60)
 
     while True:
         for event in pygame.event.get():
@@ -664,6 +700,7 @@ def gungame():
                             abnormals_killed += 1
                             shotgun_shells -= 1
                             switch_character(ch_id + 1)
+                            afterkill()
                             return
                         else:
                             shotgun_shells -= 1
@@ -674,7 +711,7 @@ def gungame():
                     escape()
 
         screen.fill(BLACK)
-        killscreen = pygame.image.load("Killscreen 1920x1080.png")
+        killscreen = pygame.image.load("Game stills/killscreen 1920x1080.png")
         screen.blit(killscreen, (0,0))
 
         pygame.draw.rect(screen, WHITE, (bar_x, bar_y, 750, 25))
@@ -692,55 +729,23 @@ def gungame():
         if slider_x <= bar_x or slider_x + 20 >= bar_x + 750: #rebounder
             sliderspeed = -sliderspeed
 
+        timer += 1/60
+        if timer >= delay:
+            gameover()
+
         pygame.draw.rect(screen, GOLD, (slider_x, bar_y - 7.5, 20, 40))
         
-        shotgun_img = shotgun_text.render(f"{shotgun_shells}", True, (255, 255, 255))
+        shotgun_img = text.render(f"{shotgun_shells}", True, (255, 255, 255))
         screen.blit(shotgun_img, (SCREEN_WIDTH - shotgun_img.get_width(), 0))
+        timer_text = text.render(f"you have five seconds. {round(timer, 1)}", True, (255, 255, 255))
+        screen.blit(timer_text, (SCREEN_WIDTH - 500 - timer_text.get_width(), 0))
 
         pygame.display.flip()
         clock.tick(60)
 
-#================================================
 
-#gameover screen & win screen
 
-fcutscenetext = ["fart", "fart1"]
-
-def finishscreen():
-    fcutscenetextindx = 0
-    
-    timer = 0
-    delay = 3
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:            
-                if event.key == pygame.K_SPACE:
-                    fcutscenetextindx += 1
-                    if fcutscenetextindx >= len(fcutscenetext):
-                        scorekeepermenu()
-
-        dooropen = pygame.image.load("startupscreen.png") # REPLACE WITH ENDING 1 - ESCAPE
-        screen.fill(BLACK)
-
-        screen.blit(dooropen, (0 , 0))
-
-        timer += 1/60
-        if timer >= delay:
-            scorekeepermenu()
-
-        rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
-        draw_text(screen, rect, WHITE, (fcutscenetext[fcutscenetextindx]))
-
-        pygame.display.flip()
-        clock.tick(60)   
-
-#unfinished
-#score keeper
-
+#============================================
 
 def scorekeepermenu():
     
@@ -773,6 +778,113 @@ def scorekeepermenu():
         pygame.display.flip()
         clock.tick(60)
 
+#==============================================
+
+#gameover screen & win screen
+
+class Ending:
+    def __init__(self, name, scene, endtext) -> None:
+        self.name = name
+        self.scene = scene
+        self.endtext = endtext
+
+        self.index = 0 #per letter index
+
+        self.text_pos = 0 #track letter postion
+        
+
+hunter = Ending("Hunter", "Game stills/cutscenes/endings/Hunter.png", ["This is the hunter ending.",
+                                                                              "Kill all of the abnormals to get it"])
+
+ignorance = Ending("Ignorance", "Game stills/cutscenes/endings/ignorance.png", ["This is the ignorance ending.",
+                                                                                       "Ignore everyone to get it."])
+
+liberation = Ending("liberation", "Game stills/cutscenes/endings/liberation!.png", ["This is the liberation ending.",
+                                                                                           "Save everyone to get it."])
+
+escap_e = Ending("escape", "Game stills/cutscenes/endings/escape.png", ["This is the escape ending.",
+                                                                              "Win the game normally to get it."])
+
+endings = [hunter, ignorance, liberation, escap_e]
+
+current_ending = None #I AM ONLY A VESSELLLLL
+
+def finishscreen():
+    global current_ending
+    #sets ending to current ending depending on the thing 
+    if abnormals_killed == 7:
+        current_ending = hunter
+    elif normals_saved == 5:
+        current_ending = liberation
+    elif normals_rejected + abnormals_rejected == 12:
+        current_ending = ignorance
+    else:
+        current_ending = escap_e
+
+    letter_interval_per_mili = 10  # milliseconds
+    when_last_letter_was_added = pygame.time.get_ticks()
+    
+    while True:
+        current_time = pygame.time.get_ticks()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:            
+                if event.key == pygame.K_SPACE:
+                    current_ending.index += 1
+                    current_ending.text_pos = 0  # Reset text position
+                    if current_ending.index >= len(current_ending.endtext):
+                        current_ending.index = 0
+
+        screen.fill(BLACK)
+
+        if current_time - when_last_letter_was_added > letter_interval_per_mili: #timer loop thingy
+            when_last_letter_was_added = current_time
+            if current_ending.text_pos < len(current_ending.endtext[current_ending.index]):
+                current_ending.text_pos += 1 # add one
+
+        if current_ending: # checks if an object exists
+            endCG = pygame.image.load(current_ending.scene)
+            screen.blit(endCG, (0, 0))  
+            rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 75, 1500, 40) 
+            display_text = current_ending.endtext[current_ending.index][:current_ending.text_pos]
+            draw_text(screen, rect, WHITE, display_text)
+
+        pygame.display.flip()
+        clock.tick(60)   
+
+
+#=============================================
+
+def stickergallery():
+
+    timer = 0
+    delay = 1.5
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
+
+        screen.fill(BLACK)
+
+        timer += 1/60
+        if timer < delay:
+            rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
+            draw_text(screen, rect, WHITE, ("press ESC to return to main menu."))
+
+        # screen.blit(cutscimg, (0 , 0))
+        
+        pygame.display.flip()
+        clock.tick(60)
+
+#=====================
+
 def gameover():
     while True:
         for event in pygame.event.get():
@@ -787,6 +899,9 @@ def gameover():
                     escape()      
                     
         screen.fill(BLACK) 
+
+        restart = pygame.image.load("Game stills/cutscenes/endings/restart.png")
+        screen.blit(restart, (0,0))
 
         mouse_pos = pygame.mouse.get_pos()
         button_color_restart = get_button_color(Button_restart, mouse_pos)
