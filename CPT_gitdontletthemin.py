@@ -133,9 +133,19 @@ def music_sfx_logic(gamestate):
 #=================================================
 
 def startupmenu(): 
+    global shotgun_shells, normals_saved, normals_rejected, abnormals_killed, abnormals_rejected
 
     gamestate = STARTUP
-    music_sfx_logic(gamestate)
+    music_sfx_logic(gamestate)    
+
+    shotgun_shells = 3
+    switch_character(0)
+
+
+    normals_saved = 0
+    normals_rejected = 0
+    abnormals_killed = 0
+    abnormals_rejected = 0
 
     while True:
         for event in pygame.event.get():
@@ -166,7 +176,7 @@ def startupmenu():
 
         draw_button(screen, Button_start, button_color_start, "Start")
         draw_button(screen, Button_options, button_color_preferences, "Preferences")
-        draw_button(screen, Button_achieve, button_color_achieve, "Achievements")
+        draw_button(screen, Button_achieve, button_color_achieve, "Gallery")
 
         pygame.display.flip()
         clock.tick(60)
@@ -420,9 +430,42 @@ Evilwitch = Character("Evil Witch", "Game stills/portraits/evilwitch 1920x1080.p
                         "*she taps her fingers together and awaits your answer while glaring evilly in an ambiguous direction(?)*",
                         "*you'll have to open the door to make the exchange.*"])
 
-# Pyromaniac = Character("PyroManiac")
+Duplicate = Character("Duplicate", "Game stills/portraits/backpacker 1920x1080.png", True,["Hey... My name is Alex. Yo?", 
+                        "I'm a backpacker because I have a backpack.",
+                        "See? *he turns to show his backpack. He seems very proud of it.*",
+                        "*Its a normal backpack*",
+                        "It's like the coolest backpack ever, and you know what? *he gets close up to the door*",
+                        "*he whispers* I'll give you it if you let me in ;) ;) ;)",
+                        "An amazing offer hm?",
+                        "Just irresistable.",
+                        "And it can be allllll yyyourrrsss if you let me give it to you.",
+                        "hurry up and make your decision.... I'm boredddddd....",
+                        "*you want to let him in but you can't help but feel like you've seen him before..."])
 
-characters = [Backpacker, Gravekeeper, Graverobber, Alonewoman, Parkranger, Evilwitch, Mother, Zipperman, Hehe]
+Dog = Character("Dog", "Game stills/portraits/Dog 1920x1080.png", True, ["RRRRUUUFFF!! RRUUUFFF!",
+                "*you feel stupid for even thinking that you could talk to a dog.*",
+                "*he continues to barking*",
+                "*why is heee kinddaaa cute tho?*",
+                "the dog continues borking."])
+
+Victim = Character("Vitcim","Game stills/portraits/Victim 1920x1080.png", False, ["*he knocks on the door frantically* PLEASE!",
+                    "THERE'S SOMETHING OUT HERE MAN I'M TELLING YOU!!",
+                    "*He struggles to open door*",
+                    "*The door handle rattles.*",
+                    "A-a-a-a thing man, it was- I was-",
+                    "*The man stutters meaninglessly*",
+                    "I-I-It ran out in front of my car man!",
+                    "It was this thing, it looked like a human, but when I checked it out, he started like--regenerating.",
+                    "And when I tried to drive off, the e-engine wouldn't start.",
+                    "I didnt know what that thing was gonna do to me so I ran out here.",
+                    "I'm so lost man!",
+                    "There's dirt all over my clothes and..."
+                    "and I think it might be following me.",
+                    "please, let me in."])
+
+
+characters = [Backpacker, Gravekeeper, Mother, Graverobber, Alonewoman, Dog, Evilwitch, Zipperman, Parkranger, Duplicate, Victim, Hehe]
+
 #NOTE: REMEMBER TO ADD CHARACTER TO LIST AFTER CREATION.
 #--------------------------
 
@@ -537,7 +580,10 @@ def main_game():
                     hour += 1
                     dooropening(False)
                     if current_character.isAbnormal:
-                        gungame()
+                        if shotgun_shells > 0:
+                            gungame()
+                        else:
+                            gameover()
                     else:
                         normals_saved += 1
                         switch_character(ch_id + 1)
@@ -628,8 +674,6 @@ def afterkill():
 
 #===================================================
 
-shotgun_shells = 3
-
 def gungame():
     global shotgun_shells, abnormals_killed
 
@@ -643,6 +687,9 @@ def gungame():
     global hit_flag
     global shotgun_shells
     global abnormals_killed
+
+    if normals_saved > 4:
+        shotgun_shells += 4
 
     critbar_pos_x_var = random.randrange(585, 1185)
     critbar_size_var = random.randrange(75, 150)
@@ -728,12 +775,15 @@ def scorekeepermenu():
 
         screen.fill(BLACK)
 
+        omnipotent_duck = pygame.image.load("Game stills/main/scorebg.png")
+        screen.blit(omnipotent_duck, (0 , 0))
+
         font = pygame.font.Font(None, 75)
         text_surface = font.render(f"Normals saved: {normals_saved}", True, WHITE)
-        screen.blit(text_surface, (400, 200))
+        screen.blit(text_surface, (1200, 600))
 
         text_surface = font.render(f"Normals reject: {normals_rejected}", True, WHITE)
-        screen.blit(text_surface, (400, 400))
+        screen.blit(text_surface, (1200, 800))
 
         text_surface = font.render(f"Abnormals killed: {abnormals_killed}", True, WHITE)
         screen.blit(text_surface, (400, 600))
@@ -755,7 +805,6 @@ class Ending:
         self.endtext = endtext
 
         self.index = 0 #per letter index
-
         self.text_pos = 0 #track letter postion
         
 
@@ -775,17 +824,30 @@ endings = [hunter, ignorance, liberation, escap_e]
 
 current_ending = None #I AM ONLY A VESSELLLLL
 
+achieved_endings = []
+
+def reset_ending(ending):
+    ending.index = 0
+    ending.text_pos = 0
+
 def finishscreen():
     global current_ending
     #sets ending to current ending depending on the thing 
-    if abnormals_killed == 7:
+
+    if abnormals_killed == 6:
         current_ending = hunter
-    elif normals_saved == 5:
+        achieved_endings.append("hunterending")
+    elif normals_saved == 6:
         current_ending = liberation
+        achieved_endings.append("liberationending")
     elif normals_rejected + abnormals_rejected == 12:
         current_ending = ignorance
+        achieved_endings.append("ignoranceending")
     else:
         current_ending = escap_e
+        achieved_endings.append("escapeending")
+
+    reset_ending(current_ending)
 
     letter_interval_per_mili = 10  # milliseconds
     when_last_letter_was_added = pygame.time.get_ticks()
@@ -824,9 +886,14 @@ def finishscreen():
 #=============================================
 
 def stickergallery():
-
+    global achieved_endings
     timer = 0
     delay = 1.5
+    
+    shotgun = pygame.transform.scale(pygame.image.load("Game stills/trophies/shotgun_trophie.png"), (200, 200))
+    insanity = pygame.transform.scale(pygame.image.load("Game stills/trophies/ignorance_trophie.png"), (200, 200))
+    together = pygame.transform.scale(pygame.image.load("Game stills/trophies/liberation_trophie.png"), (200, 200))
+    truck = pygame.transform.scale(pygame.image.load("Game stills/trophies/escape_trophie.png"), (200, 200))
 
     while True:
         for event in pygame.event.get():
@@ -838,6 +905,19 @@ def stickergallery():
                     return
 
         screen.fill(BLACK)
+
+        if "hunterending" in achieved_endings:
+            screen.blit(shotgun, (50 , 50))
+
+        if "ignoranceending" in achieved_endings:
+            screen.blit(insanity, (300, 50))
+
+        if "liberationending" in achieved_endings:
+            screen.blit(together, (550, 50))
+
+        if "escapeending" in achieved_endings:
+            screen.blit(truck, (800, 50))
+
 
         timer += 1/60
         if timer < delay:
