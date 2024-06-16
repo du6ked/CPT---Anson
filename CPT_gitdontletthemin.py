@@ -1,3 +1,37 @@
+# things to do.
+
+#not even started -->
+#----------------------------- 
+#cutscenes and pngs -----------> Next up
+#lives/shotgun shell mechanic 
+#switch character
+#more preference options
+#win screen
+#charcter progamming and dialouge 
+#listing and bug fixes
+#sfx for encounters -----------> Next up
+
+#NOTE: consider learning classes and reprogramming some of the code to make use of classes.
+#-----------------------------
+
+#in progress -->
+#-----------------------------
+#sound toggle and ambience
+#drawing scenes and characters (12%)
+#gun game mini game (probably about 80% done)
+#code optimization 
+#-----------------------------
+
+#done -->
+#------------------------
+#pressable buttons.
+#startup menu(kind done, still subject to change and modification)
+#bar and combat slider for gun game
+# Game state tracker
+# Escape menu (pause)
+# game over menu
+#-------------------------
+# 
 import pygame
 from pygame import mixer
 import sys
@@ -73,9 +107,9 @@ def soundfx(sfxindex):
     mixer.init()
     mixer.music.load(sfx[sfxindex]) 
     mixer.music.set_volume(5)
-    mixer.music.play(-1) 
+    mixer.music.play(1) 
 
-sfx = ["music_sfx/knocking.mp3", "music_sfx/abnormal_encounter.mp3"]
+sfx = ["music_sfx/knocking.mp3", "music_sfx/abnormal_encounter.mp3", "music_sfx/door_creak.mp3"]
 
 #char
 
@@ -92,6 +126,8 @@ ESCAPE = 3
 GUNGAME = 4
 GAMEOVER = 5
 MAIN_GAME = 6
+DOOROPENING = 7
+NEWCHARACTER = 8
 
 #==========================================================
 #screen
@@ -122,13 +158,16 @@ def get_button_color(button_rect, mouse_pos):
 
 def music_sfx_logic(gamestate):
     if STARTUP or PREFERENCES or ESCAPE or GAMEOVER or MAIN_GAME  == gamestate:
-        mixer.music.pause
         musicplay(0)
 
     if GUNGAME == gamestate:
-        mixer.music.pause
         soundfx(1)
-        print(True)
+
+    if DOOROPENING == gamestate:
+        soundfx(0)
+
+    if NEWCHARACTER == gamestate:
+        soundfx(2)
 
 #=================================================
 
@@ -139,8 +178,6 @@ def startupmenu():
     music_sfx_logic(gamestate)    
 
     shotgun_shells = 3
-    switch_character(0)
-
 
     normals_saved = 0
     normals_rejected = 0
@@ -200,7 +237,7 @@ def preference_menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if Button_soundpref.collidepoint(event.pos):
                     counter += 1
-                    if counter %2 == 0:
+                    if counter % 2 == 0:
                         mixer.music.pause() 
                     else:
                         mixer.music.unpause()
@@ -226,6 +263,10 @@ def preference_menu():
 
 def escape():
     global screen 
+
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -265,7 +306,7 @@ tutorialtext = ["As you walk through the forest, the sound of crunching snow can
                 "\"Please keep all of your doors and windows locked at night and don't call the police. They will not help you.\"",
                 "\"And if a police officer comes to your door, DO NOT open it. There are no patrol members around this area.\"", 
                 "\"Travel in groups during the daytime and stay inside during the night.\"",
-                "\"Ok, moving on. The Sage Bush Ski Resort has opened a new moutain trail ---\"",
+                "\"Moving on to more important news, The Sage Bush Ski Resort has opened a new moutain trail near a cemetary---\"",
                 "*You stop listening as the news reporter moves on and starts to ramble on about random stuff*",
                 "What the hell??? *you say to yourself as you stand inside the cabin shaken by the news.*", 
                 "*Suddenly, a knock is heard from your door...*",
@@ -278,6 +319,9 @@ tutorialtext = ["As you walk through the forest, the sound of crunching snow can
 def cutscene():
     tutorialtextindx = 0
     cutscindx = 0
+
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
 
     global screen
     while True:
@@ -325,7 +369,7 @@ class Character:
 
 Backpacker = Character("Backpacker", "Game stills/portraits/backpacker 1920x1080.png", False,
                       ["Hello... uhm, sorry for the trouble, do you mind if I stay here a bit?... Please I'm cold and it's getting darker.",
-                       "Is anyone home? I'm so sorry to bother you, but I'm in a really tough spot.",
+                       "...Is anyone home? I'm so sorry to bother you, but I'm in a really tough spot.",
                        "My name's Alex, and I'm a backpacker who got caught in this blizzard.",
                        "I'm freezing out here, and I'm really scared I won't make it much longer.",
                        "Please, I don't mean any harm—I just need a place to warm up and ride out the storm. I promise I won't be any trouble.", 
@@ -421,14 +465,19 @@ Evilwitch = Character("Evil Witch", "Game stills/portraits/evilwitch 1920x1080.p
                         "WHAT DO YOU CALL A FLY WITH NO LEGGSSSS?????",
                         "*Even without a response, the witch continues talking to herself*",
                         "A WALK! THATS WHAT YOU WOULD CALL IT! HAEHAHEHAHE",
+                        "MAGNIFICIENT!!!!!!!!!!!!!!!!!!"
                         "ANYWAYS... I SENSE A SPECIFIC MAGICAL PRESENCE IN THIS AREA...",
-                        "DO YOU BY CHANCE HAVE A PURPLE GEMSTONE?",
-                        "I'LL MAKE A DEAL WITH YOU YOUNG ONE",
-                        "GIVE ME THE GEMSTONE AND I WILL GIVE YOU *4* SHOTGUN SHELLS.",
-                        "AN EXQUISITE EXCHANGE!!!",
-                        "NOW, WHAT IS YOUR CHOICE?",
-                        "*she taps her fingers together and awaits your answer while glaring evilly in an ambiguous direction(?)*",
-                        "*you'll have to open the door to make the exchange.*"])
+                        "AS SUCH, HAPPEN TO FEEL LIKE GIVING YOU A FORTUNE READING.",
+                        "\"IF YOU SAVE AT LEAST 5,\"",
+                        "\"YOU WILL STAY ALIVE\"",
+                        "\"AS YOUR GUN, REPLENISH AND STRIVE\"",
+                        "\"AND YOU FOES WILL DIMINSH, WITH EVERY SHOT THAT THRIVES.\""
+                        "AN EXQUISITE FORTUNE!!!",
+                        "*she glares evilly in an ambiguous direction(?)*",
+                        "*it doesnt seem like she needs any help...*",
+                        "*why is she just standing there?*",
+                        "*let her in if you want i guess...*",
+                         "*idk i'm just your inner dialogue*"])
 
 Duplicate = Character("Duplicate", "Game stills/portraits/backpacker 1920x1080.png", True,["Hey... My name is Alex. Yo?", 
                         "I'm a backpacker because I have a backpack.",
@@ -478,11 +527,15 @@ current_character = characters[ch_id]
 def switch_character(id):
     global ch_id, dialogue_id, current_character, peephole
 
+    gamestate = DOOROPENING
+    music_sfx_logic(gamestate)
+
     ch_id = id
     dialogue_id = 0#
     
     if ch_id == len(characters):
         finishscreen()
+        switch_character(0)
 
     current_character = characters[ch_id]
 
@@ -507,7 +560,7 @@ def draw_text(screen, rect, color, text):
 def dooropening(ignore):
 
     timer = 0
-    delay = 1
+    delay = 2
 
     while True:
         for event in pygame.event.get():
@@ -522,6 +575,7 @@ def dooropening(ignore):
             return
 
         rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
+
         if ignore:
             draw_text(screen, rect, WHITE, ("You ignored the knocking..."))
         else:
@@ -536,6 +590,9 @@ switch_character(0)
 
 def main_game():
     global dialogue_id, normals_saved, normals_rejected, abnormals_killed, abnormals_rejected, ignore
+
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
 
     hour = 8
 
@@ -577,6 +634,8 @@ def main_game():
                 if Button_look.collidepoint(event.pos):
                      (looking) = not (looking)
                 if Button_letin.collidepoint(event.pos):
+                    gamestate = NEWCHARACTER
+                    music_sfx_logic(gamestate)
                     hour += 1
                     dooropening(False)
                     if current_character.isAbnormal:
@@ -655,16 +714,15 @@ def afterkill():
 
         screen.fill(BLACK)
 
-        killmessage = "you killed it........"
+        killmessage = "you killed it...."
 
-        timer += 1/10
+        timer += 1/17
 
         letter = int(timer)
         letter = letter
 
         if letter >= len(killmessage):
             return
-        
 
         rect = pygame.Rect(button_pos_x - 540, button_pos_y_options + 125, 1280, 30) 
         draw_text(screen, rect, WHITE, (killmessage[:letter]))
@@ -675,18 +733,10 @@ def afterkill():
 #===================================================
 
 def gungame():
-    global shotgun_shells, abnormals_killed
+    global shotgun_shells, abnormals_killed, slider_x, sliderspeed, critbar_pos_x_var, critbar_size_var, hit_flag, shotgun_shells, abnormals_killed
 
     gamestate = GUNGAME
     music_sfx_logic(gamestate)
-
-    global slider_x
-    global sliderspeed
-    global critbar_pos_x_var
-    global critbar_size_var
-    global hit_flag
-    global shotgun_shells
-    global abnormals_killed
 
     if normals_saved > 4:
         shotgun_shells += 4
@@ -762,6 +812,9 @@ def gungame():
 
 def scorekeepermenu():
     
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
+
     font = pygame.font.Font("Dimurphic-Gl6Z.ttf", 60)
 
     while True:
@@ -832,20 +885,27 @@ def reset_ending(ending):
 
 def finishscreen():
     global current_ending
-    #sets ending to current ending depending on the thing 
+    #sets ending to current ending depending on the thing
+
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
 
     if abnormals_killed == 6:
         current_ending = hunter
-        achieved_endings.append("hunterending")
+        if "hunterending" not in achieved_endings:
+            achieved_endings.append("hunterending")
     elif normals_saved == 6:
         current_ending = liberation
-        achieved_endings.append("liberationending")
+        if "liberationending" not in achieved_endings:
+            achieved_endings.append("liberationending")
     elif normals_rejected + abnormals_rejected == 12:
         current_ending = ignorance
-        achieved_endings.append("ignoranceending")
+        if "ignoranceending" not in achieved_endings:
+            achieved_endings.append("ignoranceending")
     else:
         current_ending = escap_e
-        achieved_endings.append("escapeending")
+        if "escapeending" not in achieved_endings:
+            achieved_endings.append("escapeending")
 
     reset_ending(current_ending)
 
@@ -889,11 +949,16 @@ def stickergallery():
     global achieved_endings
     timer = 0
     delay = 1.5
+
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
     
     shotgun = pygame.transform.scale(pygame.image.load("Game stills/trophies/shotgun_trophie.png"), (200, 200))
     insanity = pygame.transform.scale(pygame.image.load("Game stills/trophies/ignorance_trophie.png"), (200, 200))
     together = pygame.transform.scale(pygame.image.load("Game stills/trophies/liberation_trophie.png"), (200, 200))
     truck = pygame.transform.scale(pygame.image.load("Game stills/trophies/escape_trophie.png"), (200, 200))
+
+    mrgallo = pygame.transform.scale(pygame.image.load("Game stills/trophies/mrgallo_trophie.png"), (200, 200))
 
     while True:
         for event in pygame.event.get():
@@ -918,6 +983,9 @@ def stickergallery():
         if "escapeending" in achieved_endings:
             screen.blit(truck, (800, 50))
 
+        if len(achieved_endings) == 4:
+            screen.blit(mrgallo, (1050, 50))
+
 
         timer += 1/60
         if timer < delay:
@@ -932,6 +1000,10 @@ def stickergallery():
 #=====================
 
 def gameover():
+
+    gamestate = STARTUP
+    music_sfx_logic(gamestate) 
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
