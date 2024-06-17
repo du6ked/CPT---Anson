@@ -839,10 +839,10 @@ def scorekeepermenu():
         screen.blit(text_surface, (1200, 800))
 
         text_surface = font.render(f"Abnormals killed: {abnormals_killed}", True, WHITE)
-        screen.blit(text_surface, (400, 600))
+        screen.blit(text_surface, (200, 600))
 
         text_surface = font.render(f"Abnormals rejected: {abnormals_rejected}", True, WHITE)
-        screen.blit(text_surface, (400, 800))
+        screen.blit(text_surface, (200, 800))
 
         pygame.display.flip()
         clock.tick(60)
@@ -861,17 +861,45 @@ class Ending:
         self.text_pos = 0 #track letter postion
         
 
-hunter = Ending("Hunter", "Game stills/cutscenes/endings/hunter.png", ["This is the hunter ending.",
-                                                                              "Kill all of the abnormals to get it"])
+hunter = Ending("Hunter", "Game stills/cutscenes/endings/hunter.png", ["The fortune the witch was talking about came true.",
+                                                                              "You magically found 3 more shells in your pocket.",
+                                                                              "How conspicuous...",
+                                                                              "You decided to exact your revenge on these monsters.",
+                                                                              "You shot all of them at point blank range with your shotgun.",
+                                                                              "How nice, now there's blood all over you and 6 less monsters.",
+                                                                              "The end."])
 
-ignorance = Ending("Ignorance", "Game stills/cutscenes/endings/ignorance.png", ["This is the ignorance ending.",
-                                                                                       "Ignore everyone to get it."])
+ignorance = Ending("Ignorance", "Game stills/cutscenes/endings/ignorance.png", ["Are you this much of a wimp?",
+                                                                                       "Grow up.",
+                                                                                       "You slowly went insane as you continued to shiver in fear while people begged for help at your door.",
+                                                                                       "what a cruel, cruel player you are.",
+                                                                                       "You huddle in the corner as your mind begins to play tricks on you.",
+                                                                                       "You go insane even after the night ends, refusing to leave the cabin out of fear.",
+                                                                                       "Paralyzed from the fear, you eventually die of starvation.",
+                                                                                       "The end."])
 
-liberation = Ending("liberation", "Game stills/cutscenes/endings/liberation.png", ["This is the liberation ending.",
-                                                                                           "Save everyone to get it."])
+liberation = Ending("liberation", "Game stills/cutscenes/endings/liberation.png", ["Good job!",
+                                                                                           "I mean I doubt you got this first try.",
+                                                                                           "But you still got the best ending! Congratulations",
+                                                                                           "Yippe! Horray!",
+                                                                                           "Everybody is cheering you on.",
+                                                                                           "You and all 5 of the other survivors leave unharmed and safe.",
+                                                                                           "Wait, 5? I thought?...",
+                                                                                           "Oh right, that eccentric witch...",
+                                                                                           "She flew away on her broom as you opened the door.",
+                                                                                           "You vow to yourself to never come back to Sage Bush ever again.",
+                                                                                           "Everyone lived happily ever after.",
+                                                                                           "The end."])
 
-escap_e = Ending("escape", "Game stills/cutscenes/endings/escape.png", ["This is the escape ending.",
-                                                                              "Win the game normally to get it."])
+escap_e = Ending("escape", "Game stills/cutscenes/endings/escape.png", ["Good job, you completed the game.",
+                                                                              "As you walk out of the cabin door at the break of dawn, you run as fast as you can in one direction.",
+                                                                              "You lucked out as that direction happened to lead you to a road.",
+                                                                              "You waited in nervous sweat for a car to pass by, your path to safety.",
+                                                                              "Over the horizon, a car!",
+                                                                              "Rejoice!",
+                                                                              "The person driving picks you up and both of you survive and go to lala land.",
+                                                                              "This is the most boring ending by far though.",
+                                                                              "The end."])
 
 endings = [hunter, ignorance, liberation, escap_e]
 
