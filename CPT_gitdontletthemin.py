@@ -1,37 +1,3 @@
-# things to do.
-
-#not even started -->
-#----------------------------- 
-#cutscenes and pngs -----------> Next up
-#lives/shotgun shell mechanic 
-#switch character
-#more preference options
-#win screen
-#charcter progamming and dialouge 
-#listing and bug fixes
-#sfx for encounters -----------> Next up
-
-#NOTE: consider learning classes and reprogramming some of the code to make use of classes.
-#-----------------------------
-
-#in progress -->
-#-----------------------------
-#sound toggle and ambience
-#drawing scenes and characters (12%)
-#gun game mini game (probably about 80% done)
-#code optimization 
-#-----------------------------
-
-#done -->
-#------------------------
-#pressable buttons.
-#startup menu(kind done, still subject to change and modification)
-#bar and combat slider for gun game
-# Game state tracker
-# Escape menu (pause)
-# game over menu
-#-------------------------
-# 
 import pygame
 from pygame import mixer
 import sys
@@ -335,6 +301,7 @@ def cutscene():
                     if tutorialtextindx == 7:
                         cutscindx += 1 #switches scenes
                     if tutorialtextindx == len(tutorialtext) - 1:
+                        switch_character(0)
                         main_game() #directs to main game after finishing cutscene
 
         cutscimg = pygame.image.load(cutscenes[cutscindx])
@@ -535,7 +502,6 @@ def switch_character(id):
     
     if ch_id == len(characters):
         finishscreen()
-        switch_character(0)
 
     current_character = characters[ch_id]
 
@@ -589,7 +555,7 @@ def dooropening(ignore):
 switch_character(0)
 
 def main_game():
-    global dialogue_id, normals_saved, normals_rejected, abnormals_killed, abnormals_rejected, ignore
+    global dialogue_id, normals_saved, normals_rejected, abnormals_killed, abnormals_rejected, ignore, shotgun_shells
 
     gamestate = STARTUP
     music_sfx_logic(gamestate) 
@@ -644,6 +610,8 @@ def main_game():
                         else:
                             gameover()
                     else:
+                        if current_character == Evilwitch:
+                            shotgun_shells += 1000
                         normals_saved += 1
                         switch_character(ch_id + 1)
                 if Button_ignore.collidepoint(event.pos):
@@ -738,7 +706,7 @@ def gungame():
     gamestate = GUNGAME
     music_sfx_logic(gamestate)
 
-    if normals_saved > 4:
+    if normals_saved >= 4:
         shotgun_shells += 4
 
     critbar_pos_x_var = random.randrange(585, 1185)
@@ -937,7 +905,7 @@ def finishscreen():
 
     reset_ending(current_ending)
 
-    letter_interval_per_mili = 10  # milliseconds
+    letter_interval_per_mili = 5  # milliseconds
     when_last_letter_was_added = pygame.time.get_ticks()
     
     while True:
